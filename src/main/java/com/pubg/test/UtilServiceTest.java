@@ -1,9 +1,9 @@
 package com.pubg.test;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubg.ApplicationConfiguration;
-import com.pubg.service.UtilService;
 
 /**
  * 
@@ -25,30 +25,17 @@ public class UtilServiceTest {
 			break;
 
 		case 3:
-			testGetAllRemindersOfUser(ctx);
 			break;
 
 		case 4:
-			testGetAllNotificationsOfUser(ctx);
 			break;
 			
 
 		default: //All at once
-			testGetAllRemindersOfUser(ctx);
-			testGetAllNotificationsOfUser(ctx);
+			
 			break;
 		}		
 		
-	}
-	
-	private static void testGetAllRemindersOfUser(AnnotationConfigApplicationContext ctx) {
-		UtilService utilService = ctx.getBean(UtilService.class);		
-		doJsonize(utilService.getAllRemindersOfUser("2222"));
-	}
-	
-	private static void testGetAllNotificationsOfUser(AnnotationConfigApplicationContext ctx) {
-		UtilService utilService = ctx.getBean(UtilService.class);		
-		doJsonize(utilService.getAllNotificationsOfUser("2222"));
 	}
 	
 	private static void doJsonize(Object object){

@@ -1,5 +1,7 @@
 package com.pubg.repository.impl;
 
+import java.util.Date;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
+import com.pubg.entity.RegistrationEntity;
 import com.pubg.entity.UserEntity;
 import com.pubg.exception.PUBGBusinessException;
 import com.pubg.messages.constants.MessageConstants;
@@ -179,6 +182,68 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 			entityManager.clear();
 			entityManager.close();
 		}
+	}
+
+
+
+	@Override
+	public void createNewUser(RegistrationEntity registrationRequest,String otp) {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		String encryptedPassword = PUBGGeneralUtils.getEncryptedText(registrationRequest.getPassword());
+		registrationRequest.setPassword(encryptedPassword);
+		registrationRequest.setOtp(otp);
+		//This will get updated after email has been sent successfully to user.
+		registrationRequest.setVerificationLink("Not Sent");
+		registrationRequest.setStatus("Inactive");
+		registrationRequest.setSubmissionDate(new Date());
+		EntityTransaction entityTransaction = entityManager.getTransaction();
+		try {
+			//Start of transaction
+			entityTransaction.begin();
+			//persist method is used to do insertion of entities into their DB table.
+			System.out.println(registrationRequest);
+			entityManager.persist(registrationRequest);
+			//commit will actually make this transaction persist in DB.
+			entityTransaction.commit();
+		} catch (RuntimeException e) {
+		    if (entityTransaction.isActive()) {
+		        entityTransaction.rollback();
+		    }
+		    e.printStackTrace();
+		    throw new PUBGBusinessException(SOMETHING_WENT_WRONG,SOMETHING_WENT_WRONG_MSG);
+		} finally {
+			entityManager.clear();
+		    entityManager.close();
+		}
+		
+	}
+
+
+
+	@Override
+	public void activateAccount(String userId, String otp) {
+		String updateAccountStatus = "FROM RegistrationEntity where userId = '"+userId+"'";
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		EntityTransaction entityTransaction = entityManager.getTransaction();
+		try {
+			RegistrationEntity userEntity = (RegistrationEntity) entityManager.createQuery(updateAccountStatus).getResultList().get(0);
+			if(userEntity.getOtp().equals(otp)) {
+				userEntity.setStatus("Active");
+			}else {
+				throw new PUBGBusinessException("OTP_001", "Invalid OTP recieved! Can't activate your account right now.");
+			}
+			//Start of transaction
+			entityTransaction.begin();
+			//merge method is used to update entities into their DB table.
+			entityManager.merge(userEntity);
+			entityTransaction.commit();
+		}catch(RuntimeException e) {
+			e.printStackTrace();
+		}finally {
+			entityManager.clear();
+			entityManager.close();
+		}
+		
 	}
 	
 	

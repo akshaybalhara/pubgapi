@@ -1,6 +1,8 @@
 package com.pubg.service;
 
-import com.pubg.dto.EmailDTO;
+import java.util.List;
+
+import com.pubg.entity.MatchesEntity;
 
 /**
  * UtilService holds all the Service methods that are 
@@ -10,7 +12,7 @@ import com.pubg.dto.EmailDTO;
  * @author Prolifics
  *
  */
-public interface UtilService {	
+public interface MatchesService {	
 	
-	public void sendEmailWithAttachment(EmailDTO emailRequest,String appType);
+	public List<MatchesEntity> listAllMatches();
 }

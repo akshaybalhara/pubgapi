@@ -3,6 +3,7 @@ package com.pubg.service;
 import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
 import com.pubg.dto.StatusDTO;
+import com.pubg.entity.RegistrationEntity;
 import com.pubg.entity.UserEntity;
 
 /**
@@ -55,6 +56,16 @@ public interface UserService {
 	 * @return
 	 */
 	public StatusDTO updateDeviceToken(DeviceTokenDTO deviceTokenDto);
+
+	/**
+	 * registerNewUser registers a new user.
+	 * 
+	 * @param registrationRequest
+	 * @return
+	 */
+	public StatusDTO registerNewUser(RegistrationEntity registrationRequest,String otp);
+
+	public void activateAccount(String userId, String otp);
 	
 
 }

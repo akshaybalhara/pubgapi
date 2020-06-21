@@ -1,13 +1,21 @@
 package com.pubg.service.impl;
 
-import java.util.List;
-import java.util.Map;
+import javax.mail.internet.MimeMessage;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.pubg.entity.NotificationEntity;
-import com.pubg.repository.UtilRepository;
+import com.pubg.dto.EmailDTO;
+import com.pubg.entity.RegistrationEntity;
 import com.pubg.service.BaseService;
 import com.pubg.service.UtilService;
 
@@ -20,57 +28,57 @@ import com.pubg.service.UtilService;
 @Service
 public class UtilServiceImpl extends BaseService implements UtilService {
 	
-	private UtilRepository utilRepository; 
-
 	/**
-	 * getAllRemindersOfUser returns all active Reminders
-	 * of a User.
-	 * @param empId
-	 * 	<p>Employee Id of the User.</p>
-	 * @return
-	 * 	<p>List of <strong>NotificationEntity</strong> instances.
+	 * The Logger instance.
 	 */
-	@Override
-	public List<NotificationEntity> getAllRemindersOfUser(String empId){
-		if(empId!=null && !empId.isEmpty()){
-			return utilRepository.getNotificationsOfUserByType(empId,true);
-		}
-		return null;
-	}
-	/**
-	 * getAllNotificationsOfUser returns all current and historical
-	 * Notifications of a User.
-	 * @param empId
-	 * 	<p>Employee Id of the User.</p>
-	 * @return
-	 * 	<p>List of <strong>NotificationEntity</strong> instances.
-	 */
-	@Override
-	public List<NotificationEntity> getAllNotificationsOfUser(String empId){
-		if(empId!=null && !empId.isEmpty()){
-			return utilRepository.getNotificationsOfUserByType(empId,false);
-		}
-		return null;
-	}
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());	
 	
-	
-	/**
-	 * @param utilRepository the utilRepository to set
-	 */
 	@Autowired
-	public void setUtilRepository(UtilRepository utilRepository) {
-		this.utilRepository = utilRepository;
-	}
+    private JavaMailSender javaMailSender;
+	
+	@PersistenceUnit
+	private EntityManagerFactory entityManagerFactory;
+	
 	@Override
-	public Object getApplicationDetails(String applicationType, String identifier) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Map<String, String> getAllApprovers(String employeeId, int levels) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	@Async
+	public void sendEmailWithAttachment(EmailDTO emailRequest,String appType){
+		logger.info("Entering UtilServiceImpl.sendEmailWithAttachment()");
+        MimeMessage msg = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper;
+        boolean mailSent=false;
+		try {
+			helper = new MimeMessageHelper(msg, true);
+			helper.setTo(emailRequest.getSendTo());
+	        helper.setSubject(emailRequest.getSubject());
+	        helper.setText(emailRequest.getMessage(), true);
+	        //helper.addAttachment("my_photo.png", new ClassPathResource("android.png"));
+	        javaMailSender.send(msg);
+	        mailSent=true;
+		} catch (javax.mail.MessagingException e) {
+			e.printStackTrace();
+		}
+		
+		if(mailSent) {
+			String updateVerificationLinkStatus = "FROM RegistrationEntity where userId = '"+emailRequest.getUserId()+"'";
+			EntityManager entityManager = entityManagerFactory.createEntityManager();
+			EntityTransaction entityTransaction = entityManager.getTransaction();
+			try {
+				RegistrationEntity userEntity = (RegistrationEntity) entityManager.createQuery(updateVerificationLinkStatus).getResultList().get(0);
+				userEntity.setVerificationLink("Sent");
+				//Start of transaction
+				entityTransaction.begin();
+				//merge method is used to update entities into their DB table.
+				entityManager.merge(userEntity);
+				entityTransaction.commit();
+			}catch(RuntimeException e) {
+				e.printStackTrace();
+			}finally {
+				entityManager.clear();
+				entityManager.close();
+			}
+		}
+		logger.info("Exiting UtilServiceImpl.sendEmailWithAttachment()");
+    }
 
 	
 }

@@ -39,7 +39,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * @author Prolifics.
  *
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins ="*")
 @RestController
 @RequestMapping("/user-auth")
 @Tag(name = "UserAuthentication", description = "User Authentication API")
@@ -90,10 +90,14 @@ public class UserAuthenticationController {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUserId(), authenticationRequest.getPassword()));
 			user = userService.getUserProfile(authenticationRequest.getUserId());
-			user.setPassword(null);
-			user.setToken(jwtTokenUtil.generateToken(user.getUserId()));	
-			StatusDTO statusDto = new StatusDTO(true,MessageConstants.LOGIN_SUCCESS_CODE,"Logged in successfully");
-			user.setStatusDto(statusDto);
+			if(!user.getStatus().equalsIgnoreCase("Inactive")) {
+				user.setPassword(null);
+				user.setToken(jwtTokenUtil.generateToken(user.getUserId()));	
+				StatusDTO statusDto = new StatusDTO(true,MessageConstants.LOGIN_SUCCESS_CODE,"Logged in successfully");
+				user.setStatusDto(statusDto);
+			}else {
+				throw new PUBGBusinessException("INA_001", "Your account is not activated yet. Please check your registered email to activate your account.");
+			}	
 
 		} catch (DisabledException e) {
 			throw new PUBGBusinessException("USER_DISABLED", e.getMessage());

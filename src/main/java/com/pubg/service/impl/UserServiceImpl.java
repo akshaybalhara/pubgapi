@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
 import com.pubg.dto.StatusDTO;
+import com.pubg.entity.RegistrationEntity;
 import com.pubg.entity.UserEntity;
 import com.pubg.messages.constants.MessageConstants;
 import com.pubg.repository.UserInfoRepository;
@@ -98,6 +99,24 @@ public class UserServiceImpl  extends BaseService implements UserService, Messag
 		userInfoRepository.updateDeviceToken(deviceTokenDto);
 		StatusDTO status = new StatusDTO(true,"","");
 		return status;
+	}
+
+	@Override
+	public StatusDTO registerNewUser(RegistrationEntity registrationRequest, String otp) {
+		logger.info("Entering into UserServiceImpl.registerNewUser()");
+		userInfoRepository.createNewUser(registrationRequest,otp);
+		StatusDTO status = new StatusDTO(true,"REG_001","Registered successfully! An email has been sent to your registered email("
+				+registrationRequest.getEmail()+ "). Please check your email and activate your account by clicking the link inside your mail.");
+		logger.info("Exiting UserServiceImpl.registerNewUser()");
+		return status;
+	}
+
+	@Override
+	public void activateAccount(String userId, String otp) {
+		logger.info("Entering into UserServiceImpl.activateAccount()");
+		userInfoRepository.activateAccount(userId,otp);
+		System.out.println("Account activated successfully.");
+		logger.info("Exiting UserServiceImpl.activateAccount()");
 	}
 
 }

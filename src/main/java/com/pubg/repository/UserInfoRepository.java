@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
+import com.pubg.entity.RegistrationEntity;
 import com.pubg.entity.UserEntity;
 
 @Repository
@@ -39,5 +40,15 @@ public interface UserInfoRepository {
 	 * @return
 	 */
 	public void updateDeviceToken(DeviceTokenDTO deviceTokenDto);
+
+	/**
+	 * createNewUser registers a new user.
+	 * 
+	 * @param registrationRequest
+	 * @return
+	 */
+	public void createNewUser(RegistrationEntity registrationRequest,String otp);
+
+	public void activateAccount(String userId, String otp);
 
 }

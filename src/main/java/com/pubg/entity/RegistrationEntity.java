@@ -4,26 +4,20 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pubg.dto.StatusDTO;
 
 @Entity
 @Table(name = "users_tbl")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserEntity {
+public class RegistrationEntity {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="userId")
     private String userId;
 	
@@ -45,18 +39,17 @@ public class UserEntity {
 	@Column(name="gender")
     private String gender;
 	
+	@Column(name="otp")
+    private String otp;
+	
+	@Column(name="verificationLink")
+    private String verificationLink;
+	
 	@Column(name="status")
     private String status;
 	
 	@Column(name="submissionDate")
     private Date submissionDate;
-	
-	@Transient
-	@JsonProperty("statusDto")
-	private StatusDTO statusDto;
-	
-	@Transient
-	private String token;
 
 	/**
 	 * @return the userId
@@ -157,34 +150,6 @@ public class UserEntity {
 	}
 
 	/**
-	 * @return the statusDto
-	 */
-	public StatusDTO getStatusDto() {
-		return statusDto;
-	}
-
-	/**
-	 * @param statusDto the statusDto to set
-	 */
-	public void setStatusDto(StatusDTO statusDto) {
-		this.statusDto = statusDto;
-	}
-
-	/**
-	 * @return the token
-	 */
-	public String getToken() {
-		return token;
-	}
-
-	/**
-	 * @param token the token to set
-	 */
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	/**
 	 * @return the status
 	 */
 	public String getStatus() {
@@ -212,11 +177,40 @@ public class UserEntity {
 		this.gender = gender;
 	}
 
+	/**
+	 * @return the otp
+	 */
+	public String getOtp() {
+		return otp;
+	}
+
+	/**
+	 * @param otp the otp to set
+	 */
+	public void setOtp(String otp) {
+		this.otp = otp;
+	}
+
+	/**
+	 * @return the verificationLink
+	 */
+	public String getVerificationLink() {
+		return verificationLink;
+	}
+
+	/**
+	 * @param verificationLink the verificationLink to set
+	 */
+	public void setVerificationLink(String verificationLink) {
+		this.verificationLink = verificationLink;
+	}
+
 	@Override
 	public String toString() {
-		return "UserEntity [userId=" + userId + ", password=" + password + ", phone=" + phone + ", email=" + email
-				+ ", fname=" + fname + ", lname=" + lname + ", status=" + status + ", submissionDate=" + submissionDate
-				+ ", statusDto=" + statusDto + ", token=" + token + "]";
+		return "RegistrationEntity [userId=" + userId + ", password=" + password + ", phone=" + phone + ", email="
+				+ email + ", fname=" + fname + ", lname=" + lname + ", gender=" + gender + ", otp=" + otp
+				+ ", verificationLink=" + verificationLink + ", status=" + status + ", submissionDate=" + submissionDate
+				+ "]";
 	}
 
 }
