@@ -195,6 +195,7 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 		//This will get updated after email has been sent successfully to user.
 		registrationRequest.setVerificationLink("Not Sent");
 		registrationRequest.setStatus("Inactive");
+		registrationRequest.setStatus("user");
 		registrationRequest.setSubmissionDate(new Date());
 		EntityTransaction entityTransaction = entityManager.getTransaction();
 		try {

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -74,12 +75,12 @@ public class MatchesController {
 	@ApiResponses(value = { 
 	        @ApiResponse(responseCode = "200", description = "OK",
 	                content = @Content(schema = @Schema(implementation = MatchesEntity.class,hidden = true)))})
-	@RequestMapping(value = "/list-matches", method=RequestMethod.GET)
-	public  @ResponseBody List<MatchesEntity> getAllMatches(){
+	@RequestMapping(value = "/list-matches/{leagueType}", method=RequestMethod.GET)
+	public  @ResponseBody List<MatchesEntity> getAllMatches(@PathVariable String leagueType){
 		logger.info("Entering MatchesController.getAllMatches() method.");
 		List<MatchesEntity> matches = new ArrayList<MatchesEntity>();
 		try {
-			matches = matchesService.listAllMatches();
+			matches = matchesService.listAllMatches(leagueType);
 		} catch (DisabledException e) {
 			throw new PUBGBusinessException("USER_DISABLED", e.getMessage());
 		} catch (BadCredentialsException e) {

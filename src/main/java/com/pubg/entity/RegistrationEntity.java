@@ -39,6 +39,9 @@ public class RegistrationEntity {
 	@Column(name="gender")
     private String gender;
 	
+	@Column(name="role")
+    private String role;
+	
 	@Column(name="otp")
     private String otp;
 	
@@ -205,12 +208,26 @@ public class RegistrationEntity {
 		this.verificationLink = verificationLink;
 	}
 
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
+	}
+
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	@Override
 	public String toString() {
 		return "RegistrationEntity [userId=" + userId + ", password=" + password + ", phone=" + phone + ", email="
-				+ email + ", fname=" + fname + ", lname=" + lname + ", gender=" + gender + ", otp=" + otp
-				+ ", verificationLink=" + verificationLink + ", status=" + status + ", submissionDate=" + submissionDate
-				+ "]";
+				+ email + ", fname=" + fname + ", lname=" + lname + ", gender=" + gender + ", role=" + role + ", otp="
+				+ otp + ", verificationLink=" + verificationLink + ", status=" + status + ", submissionDate="
+				+ submissionDate + "]";
 	}
 
 }

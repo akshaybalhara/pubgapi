@@ -14,5 +14,5 @@ import com.pubg.entity.MatchesEntity;
  */
 public interface MatchesService {	
 	
-	public List<MatchesEntity> listAllMatches();
+	public List<MatchesEntity> listAllMatches(String leagueType);
 }

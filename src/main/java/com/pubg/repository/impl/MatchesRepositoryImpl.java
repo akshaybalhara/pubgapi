@@ -44,10 +44,10 @@ public class MatchesRepositoryImpl implements MatchesRepository, MessageConstant
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MatchesEntity> getAllMatches() {
+	public List<MatchesEntity> getAllMatches(String leagueType) {
 		logger.info("Entering MatchesRepositoryImpl.getAllMatches()");
 		List<MatchesEntity> matches = new ArrayList<MatchesEntity>();
-		String selectQuery = "FROM MatchesEntity where status='Coming Soon'";
+		String selectQuery = "FROM MatchesEntity where status='Coming Soon' and leagueType='"+leagueType+"'";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		matches = entityManager.createQuery(selectQuery).getResultList();	
 		entityManager.clear();

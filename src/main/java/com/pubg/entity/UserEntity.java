@@ -48,6 +48,9 @@ public class UserEntity {
 	@Column(name="status")
     private String status;
 	
+	@Column(name="role")
+    private String role;
+	
 	@Column(name="submissionDate")
     private Date submissionDate;
 	
@@ -212,11 +215,25 @@ public class UserEntity {
 		this.gender = gender;
 	}
 
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
+	}
+
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	@Override
 	public String toString() {
 		return "UserEntity [userId=" + userId + ", password=" + password + ", phone=" + phone + ", email=" + email
-				+ ", fname=" + fname + ", lname=" + lname + ", status=" + status + ", submissionDate=" + submissionDate
-				+ ", statusDto=" + statusDto + ", token=" + token + "]";
+				+ ", fname=" + fname + ", lname=" + lname + ", gender=" + gender + ", status=" + status + ", role="
+				+ role + ", submissionDate=" + submissionDate + ", statusDto=" + statusDto + ", token=" + token + "]";
 	}
 
 }

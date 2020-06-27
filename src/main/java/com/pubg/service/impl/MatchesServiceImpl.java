@@ -33,9 +33,9 @@ public class MatchesServiceImpl  extends BaseService implements MatchesService, 
 	private MatchesRepository matchesRepository;
 
 	@Override
-	public List<MatchesEntity> listAllMatches() {
+	public List<MatchesEntity> listAllMatches(String leagueType) {
 		logger.info("Entering into MatchesServiceImpl.listAllMatches()");
-		List<MatchesEntity> matches = matchesRepository.getAllMatches();
+		List<MatchesEntity> matches = matchesRepository.getAllMatches(leagueType);
 		logger.info("Exiting MatchesServiceImpl.listAllMatches()");
 		return matches;
 	}

@@ -9,6 +9,6 @@ import com.pubg.entity.MatchesEntity;
 @Repository
 public interface MatchesRepository {
 	
-	public List<MatchesEntity> getAllMatches();
+	public List<MatchesEntity> getAllMatches(String leagueType);
 
 }

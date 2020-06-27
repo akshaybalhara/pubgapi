@@ -42,6 +42,9 @@ public class MatchesEntity {
 	@Column(name="map")
     private String map;
 	
+	@Column(name="leagueType")
+    private String leagueType;
+	
 	@Column(name="status")
     private String status;
 	
@@ -205,12 +208,26 @@ public class MatchesEntity {
 		this.dateAndTime = dateAndTime;
 	}
 
+	/**
+	 * @return the leagueType
+	 */
+	public String getLeagueType() {
+		return leagueType;
+	}
+
+	/**
+	 * @param leagueType the leagueType to set
+	 */
+	public void setLeagueType(String leagueType) {
+		this.leagueType = leagueType;
+	}
+
 	@Override
 	public String toString() {
 		return "MatchesEntity [matchId=" + matchId + ", entryFee=" + entryFee + ", firstPrize=" + firstPrize
 				+ ", secondPrize=" + secondPrize + ", thirdPrize=" + thirdPrize + ", perKill=" + perKill
-				+ ", matchType=" + matchType + ", map=" + map + ", status=" + status + ", dateAndTime=" + dateAndTime
-				+ ", submissionDate=" + submissionDate + "]";
+				+ ", matchType=" + matchType + ", map=" + map + ", leagueType=" + leagueType + ", status=" + status
+				+ ", dateAndTime=" + dateAndTime + ", submissionDate=" + submissionDate + "]";
 	}
 
 }
