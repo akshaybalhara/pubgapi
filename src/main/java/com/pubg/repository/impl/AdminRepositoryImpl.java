@@ -77,7 +77,7 @@ public class AdminRepositoryImpl implements AdminRepository,MessageConstants{
 			entity.setMatchType(matchesDTO.getMatchType());
 			entity.setMap(matchesDTO.getMap());
 			entity.setLeagueType(matchesDTO.getLeagueType());
-			entity.setStatus(matchesDTO.getStatus());
+			entity.setStatus("Coming Soon");
 			entity.setDateAndTime(matchesDTO.getDateAndTime());
 			entity.setSubmissionDate(new Date());
 			break;

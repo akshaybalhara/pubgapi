@@ -5,6 +5,7 @@ package com.pubg.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,10 @@ public class AdminController {
 	 */
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());	
 	
-	AdminService adminService;
+	@Autowired
+	private AdminService adminService;
+	
+	
 	@Operation(summary = "Validates the heart-beat of the API.", description = "Pings the API and check if its up and running.", tags = { "AdminController" })
 	@RequestMapping(method=RequestMethod.GET)
 	public @ResponseBody String ping(){
