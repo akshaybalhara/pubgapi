@@ -12,4 +12,10 @@ public interface MessageConstants {
 	public static final String INVALID_OLD_PASS_MSG = "Invalid old password!";
 	public static final String NO_USER_EXIST = "INV_002";
 	public static final String NO_USER_EXIST_MSG = "No such user exist.";
+	
+	public static final String ADMIN_INSERT_MATCH_CODE = "AIM_001";
+	public static final String ADMIN_INSERT_MATCH_MSG = "Match has been created successfully.";
+	
+	
 }
+
