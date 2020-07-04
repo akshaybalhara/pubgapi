@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pubg.dto.MatchesDTO;
+import com.pubg.dto.PushNotificationRequestDTO;
 import com.pubg.dto.StatusDTO;
 import com.pubg.entity.MatchesEntity;
 import com.pubg.service.AdminService;
+import com.pubg.service.PushNotificationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,6 +45,9 @@ public class AdminController {
 	
 	@Autowired
 	private AdminService adminService;
+
+	@Autowired
+	private PushNotificationService pushNotificationService;
 	
 	
 	@Operation(summary = "Validates the heart-beat of the API.", description = "Pings the API and check if its up and running.", tags = { "AdminController" })
@@ -65,6 +70,8 @@ public class AdminController {
 		StatusDTO response = null;
 		matchesDTO.setOperation("Insert");
 		response = adminService.processMatches(matchesDTO);
+		PushNotificationRequestDTO request = new PushNotificationRequestDTO("New match available in "+matchesDTO.getLeagueType().toUpperCase()+" League", "Join to win Rs."+matchesDTO.getFirstPrize(), "all");
+		pushNotificationService.sendPushNotificationToTopic(request);
 		logger.info("Exiting AdminController.insertMatches() method.");
 		return 	response;
 	}	
