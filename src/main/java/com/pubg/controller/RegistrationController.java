@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -86,7 +87,7 @@ public class RegistrationController {
 			statusDto = userService.registerNewUser(registrationRequest,otp);
 			if(statusDto.isSucceeded()) {
 				EmailDTO emailRequest = new EmailDTO(registrationRequest.getEmail(), "Registered successfully", "<h1>Registration Successfull.</h1><br><a href=\""
-						+"http://3.128.4.163:8080/pubgroom-api/user-reg/verifiy-account/"+registrationRequest.getUserId()+"/"+otp+"\"> Click here to verify your account </a><br><br>Regards,<br>PUBG Rooms Team");
+						+"http://3.128.4.163:8080/pubgroom-api/user-reg/verify-account/"+registrationRequest.getUserId()+"/"+otp+"\"> Click here to verify your account </a><br><br>Regards,<br>PUBG Rooms Team");
 				emailRequest.setUserId(registrationRequest.getUserId());
 				utilService.sendEmailWithAttachment(emailRequest,"Registration");
 			}
@@ -103,7 +104,7 @@ public class RegistrationController {
 	@ApiResponses(value = { 
 	        @ApiResponse(responseCode = "200", description = "OK",
 	                content = @Content(schema = @Schema(implementation = ModelAndView.class,hidden = true)))})
-	@RequestMapping(value = "/verifiy-account/{userId}/{otp}", method=RequestMethod.GET)
+	@RequestMapping(value = "/verify-account/{userId}/{otp}", method=RequestMethod.GET)
 	public ModelAndView verifyAccount(@PathVariable String userId, @PathVariable String otp) {
 		logger.info("Entering RegistrationController.verifyAccount() method.");
 		ModelAndView modelAndView = new ModelAndView("verify-account");
@@ -112,6 +113,49 @@ public class RegistrationController {
 		logger.info("Exiting RegistrationController.verifyAccount() method.");
 		return modelAndView;
 	}
+	
+	@Operation(summary = "Validates if email exists.", description = "Validates if email exists.", tags = { "UserRegistration" })
+	@RequestMapping(value = "/verify-email", method=RequestMethod.GET)
+	public @ResponseBody StatusDTO verifyEmail(@RequestParam String email){
+		logger.info("Entering RegistrationController.verifyEmail() method.");
+		boolean isEmailExists = userService.checkEmail(email);
+		StatusDTO status = null;
+		if(isEmailExists) {
+			status = new StatusDTO(true, "EML_001", "Email already exists.");
+		}else {
+			status = new StatusDTO(false, "EML_002", "Email is valid.");
+		}
+		return status;
+	}
+	
+	@Operation(summary = "Validates if phone exists.", description = "Validates if phone exists.", tags = { "UserRegistration" })
+	@RequestMapping(value = "/verify-phone/{phone}", method=RequestMethod.GET)
+	public @ResponseBody StatusDTO verifyPhone(@PathVariable String phone){
+		logger.info("Entering RegistrationController.verifyPhone() method.");
+		boolean isPhoneExists = userService.checkPhone(phone);
+		StatusDTO status = null;
+		if(isPhoneExists) {
+			status = new StatusDTO(true, "PHN_001", "Phone already exists.");
+		}else {
+			status = new StatusDTO(false, "PHN_002", "Phone is valid.");
+		}
+		return status;
+	}
+	
+	@Operation(summary = "Validates if userId exists.", description = "Validates if userId exists.", tags = { "UserRegistration" })
+	@RequestMapping(value = "/verify-userid/{userId}", method=RequestMethod.GET)
+	public @ResponseBody StatusDTO verifyUserId(@PathVariable String userId){
+		logger.info("Entering RegistrationController.verifyUserId() method.");
+		boolean isUserIdExists = userService.checkUserId(userId);
+		StatusDTO status = null;
+		if(isUserIdExists) {
+			status = new StatusDTO(true, "USR_001", "UserId already exists.");
+		}else {
+			status = new StatusDTO(false, "USR_002", "UserId is valid.");
+		}
+		return status;
+	}
+	
 	
 	/**
 	 * Updates user's device token for push notifications.

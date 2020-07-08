@@ -43,7 +43,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/user-auth")
 @Tag(name = "UserAuthentication", description = "User Authentication API")
-public class UserAuthenticationController {
+public class UserAuthenticationController implements MessageConstants {
 	
 	/**
 	 * The Logger instance.
@@ -90,7 +90,7 @@ public class UserAuthenticationController {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUserId(), authenticationRequest.getPassword()));
 			user = userService.getUserProfile(authenticationRequest.getUserId());
-			if(!user.getStatus().equalsIgnoreCase("Inactive")) {
+			if(!user.getStatus().equalsIgnoreCase(INACTIVE)) {
 				user.setPassword(null);
 				user.setToken(jwtTokenUtil.generateToken(user.getUserId()));	
 				StatusDTO statusDto = new StatusDTO(true,MessageConstants.LOGIN_SUCCESS_CODE,"Logged in successfully");

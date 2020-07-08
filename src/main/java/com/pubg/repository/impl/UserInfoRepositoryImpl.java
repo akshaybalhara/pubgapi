@@ -193,9 +193,9 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 		registrationRequest.setPassword(encryptedPassword);
 		registrationRequest.setOtp(otp);
 		//This will get updated after email has been sent successfully to user.
-		registrationRequest.setVerificationLink("Not Sent");
-		registrationRequest.setStatus("Inactive");
-		registrationRequest.setStatus("user");
+		registrationRequest.setVerificationLink(PENDING);
+		registrationRequest.setStatus(INACTIVE);
+		registrationRequest.setRole(USER_ROLE);
 		registrationRequest.setSubmissionDate(new Date());
 		EntityTransaction entityTransaction = entityManager.getTransaction();
 		try {
@@ -229,7 +229,7 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 		try {
 			RegistrationEntity userEntity = (RegistrationEntity) entityManager.createQuery(updateAccountStatus).getResultList().get(0);
 			if(userEntity.getOtp().equals(otp)) {
-				userEntity.setStatus("Active");
+				userEntity.setStatus(ACTIVE);
 			}else {
 				throw new PUBGBusinessException("OTP_001", "Invalid OTP recieved! Can't activate your account right now.");
 			}
@@ -243,6 +243,48 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 		}finally {
 			entityManager.clear();
 			entityManager.close();
+		}
+		
+	}
+
+
+
+	@Override
+	public boolean checkEmail(String email) {
+		String updateAccountStatus = "FROM RegistrationEntity where email = '"+email+"'";
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		if(entityManager.createQuery(updateAccountStatus).getResultList().size() > 0) {
+			return true;
+		}else {
+			return false;
+		}
+		
+	}
+
+
+
+	@Override
+	public boolean checkPhone(String phone) {
+		String updateAccountStatus = "FROM RegistrationEntity where phone = '"+phone+"'";
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		if(entityManager.createQuery(updateAccountStatus).getResultList().size() > 0) {
+			return true;
+		}else {
+			return false;
+		}
+		
+	}
+
+
+
+	@Override
+	public boolean checkUserId(String userId) {
+		String updateAccountStatus = "FROM RegistrationEntity where userId = '"+userId+"'";
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		if(entityManager.createQuery(updateAccountStatus).getResultList().size() > 0) {
+			return true;
+		}else {
+			return false;
 		}
 		
 	}

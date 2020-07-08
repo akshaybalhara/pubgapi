@@ -119,4 +119,19 @@ public class UserServiceImpl  extends BaseService implements UserService, Messag
 		logger.info("Exiting UserServiceImpl.activateAccount()");
 	}
 
+	@Override
+	public boolean checkEmail(String email) {
+		return userInfoRepository.checkEmail(email);
+	}
+
+	@Override
+	public boolean checkPhone(String phone) {
+		return userInfoRepository.checkPhone(phone);
+	}
+
+	@Override
+	public boolean checkUserId(String userId) {
+		return userInfoRepository.checkUserId(userId);
+	}
+
 }

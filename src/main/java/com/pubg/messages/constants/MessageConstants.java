@@ -16,6 +16,14 @@ public interface MessageConstants {
 	public static final String ADMIN_INSERT_MATCH_CODE = "AIM_001";
 	public static final String ADMIN_INSERT_MATCH_MSG = "Match has been created successfully.";
 	
+	//Static values used in DB
+	public static final String INACTIVE = "Inactive";
+	public static final String ACTIVE = "Active";
+	public static final String USER_ROLE = "User";
+	public static final String PENDING = "Pending";
+	
+	
+	
 	
 }
 

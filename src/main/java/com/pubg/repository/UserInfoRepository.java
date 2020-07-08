@@ -51,4 +51,10 @@ public interface UserInfoRepository {
 
 	public void activateAccount(String userId, String otp);
 
+	public boolean checkEmail(String email);
+
+	public boolean checkPhone(String phone);
+
+	public boolean checkUserId(String userId);
+
 }
