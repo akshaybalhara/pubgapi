@@ -20,6 +20,7 @@ import com.pubg.config.JwtTokenUtil;
 import com.pubg.dto.DeviceTokenDTO;
 import com.pubg.dto.StatusDTO;
 import com.pubg.dto.UserDTO;
+import com.pubg.entity.AppUpdateEntity;
 import com.pubg.entity.UserEntity;
 import com.pubg.exception.PUBGBusinessException;
 import com.pubg.messages.constants.MessageConstants;
@@ -74,6 +75,13 @@ public class UserAuthenticationController implements MessageConstants {
 	public @ResponseBody String ping(){
 		logger.info("Entering UserAuthenticatioController.ping() method.");
 		return "User Authentication API is up and running at end point /user-auth";
+	}
+	
+	@Operation(summary = "Check app update.", description = "Check app update.", tags = { "UserAuthentication" })
+	@RequestMapping(value="/checkUpdate", method=RequestMethod.GET)
+	public @ResponseBody AppUpdateEntity checkUpdate(){
+		logger.info("Entering UserAuthenticatioController.checkUpdate() method.");
+		return userService.checkAppUpdate();
 	}
 	
 	/**

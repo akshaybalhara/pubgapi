@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
 import com.pubg.dto.StatusDTO;
+import com.pubg.entity.AppUpdateEntity;
 import com.pubg.entity.RegistrationEntity;
 import com.pubg.entity.UserEntity;
 import com.pubg.messages.constants.MessageConstants;
@@ -97,7 +98,7 @@ public class UserServiceImpl  extends BaseService implements UserService, Messag
 	@Override
 	public StatusDTO updateDeviceToken(DeviceTokenDTO deviceTokenDto) {
 		userInfoRepository.updateDeviceToken(deviceTokenDto);
-		StatusDTO status = new StatusDTO(true,"","");
+		StatusDTO status = new StatusDTO(true,"TOK_001","Device Token updated successfully.");
 		return status;
 	}
 
@@ -132,6 +133,11 @@ public class UserServiceImpl  extends BaseService implements UserService, Messag
 	@Override
 	public boolean checkUserId(String userId) {
 		return userInfoRepository.checkUserId(userId);
+	}
+
+	@Override
+	public AppUpdateEntity checkAppUpdate() {
+		return userInfoRepository.checkAppVersion();
 	}
 
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
+import com.pubg.entity.AppUpdateEntity;
 import com.pubg.entity.RegistrationEntity;
 import com.pubg.entity.UserEntity;
 
@@ -56,5 +57,7 @@ public interface UserInfoRepository {
 	public boolean checkPhone(String phone);
 
 	public boolean checkUserId(String userId);
+
+	public AppUpdateEntity checkAppVersion();
 
 }

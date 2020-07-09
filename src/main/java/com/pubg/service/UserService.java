@@ -3,6 +3,7 @@ package com.pubg.service;
 import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
 import com.pubg.dto.StatusDTO;
+import com.pubg.entity.AppUpdateEntity;
 import com.pubg.entity.RegistrationEntity;
 import com.pubg.entity.UserEntity;
 
@@ -72,6 +73,8 @@ public interface UserService {
 	public boolean checkPhone(String phone);
 
 	public boolean checkUserId(String userId);
+
+	public AppUpdateEntity checkAppUpdate();
 	
 
 }

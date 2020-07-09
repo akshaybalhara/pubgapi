@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
+import com.pubg.entity.AppUpdateEntity;
 import com.pubg.entity.RegistrationEntity;
 import com.pubg.entity.UserEntity;
 import com.pubg.exception.PUBGBusinessException;
@@ -164,13 +165,13 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 	@Override
 	public void updateDeviceToken(DeviceTokenDTO deviceTokenDto) {
 		
-		String updateUserInfoQuery = "FROM UserEntity where EMPLOYEE_ID = '"+deviceTokenDto.getUserId()+"'";
+		String updateUserInfoQuery = "FROM UserEntity where userId = '"+deviceTokenDto.getUserId()+"'";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		EntityTransaction entityTransaction = entityManager.getTransaction();
 		try {
 			UserEntity userEntity = (UserEntity) entityManager.createQuery(updateUserInfoQuery).getResultList().get(0);
-			//userEntity.setDevice(deviceTokenDto.getDeviceType());
-			//userEntity.setDeviceToken(deviceTokenDto.getDevicetoken());
+			userEntity.setDevice(deviceTokenDto.getDeviceType());
+			userEntity.setDeviceToken(deviceTokenDto.getDevicetoken());
 			//Start of transaction
 			entityTransaction.begin();
 			//merge method is used to update entities into their DB table.
@@ -287,6 +288,20 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 			return false;
 		}
 		
+	}
+
+
+
+	@Override
+	public AppUpdateEntity checkAppVersion() {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		String query = "SELECT COALESCE(MAX(id),1) FROM AppUpdateEntity";
+		int id = (int) entityManager.createQuery(query).getResultList().get(0);
+		query = "FROM AppUpdateEntity where id = "+id;
+		AppUpdateEntity appUpdateEntity = (AppUpdateEntity) entityManager.createQuery(query).getResultList().get(0);
+		entityManager.clear();
+		entityManager.close(); 
+		return appUpdateEntity;
 	}
 	
 	

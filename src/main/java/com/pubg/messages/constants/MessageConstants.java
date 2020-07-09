@@ -21,6 +21,7 @@ public interface MessageConstants {
 	public static final String ACTIVE = "Active";
 	public static final String USER_ROLE = "User";
 	public static final String PENDING = "Pending";
+	public static final String SENT = "Sent";
 	
 	
 	

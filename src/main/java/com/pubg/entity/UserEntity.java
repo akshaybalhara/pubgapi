@@ -51,6 +51,12 @@ public class UserEntity {
 	@Column(name="role")
     private String role;
 	
+	@Column(name="device")
+    private String device;
+	
+	@Column(name="deviceToken")
+    private String deviceToken;
+	
 	@Column(name="submissionDate")
     private Date submissionDate;
 	
@@ -229,11 +235,40 @@ public class UserEntity {
 		this.role = role;
 	}
 
+	/**
+	 * @return the device
+	 */
+	public String getDevice() {
+		return device;
+	}
+
+	/**
+	 * @param device the device to set
+	 */
+	public void setDevice(String device) {
+		this.device = device;
+	}
+
+	/**
+	 * @return the deviceToken
+	 */
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	/**
+	 * @param deviceToken the deviceToken to set
+	 */
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
+	}
+
 	@Override
 	public String toString() {
 		return "UserEntity [userId=" + userId + ", password=" + password + ", phone=" + phone + ", email=" + email
 				+ ", fname=" + fname + ", lname=" + lname + ", gender=" + gender + ", status=" + status + ", role="
-				+ role + ", submissionDate=" + submissionDate + ", statusDto=" + statusDto + ", token=" + token + "]";
+				+ role + ", device=" + device + ", deviceToken=" + deviceToken + ", submissionDate=" + submissionDate
+				+ ", statusDto=" + statusDto + ", token=" + token + "]";
 	}
 
 }
