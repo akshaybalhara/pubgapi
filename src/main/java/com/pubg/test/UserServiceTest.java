@@ -82,7 +82,7 @@ public class UserServiceTest {
 		DeviceTokenDTO deviceToken = new DeviceTokenDTO();
 		deviceToken.setUserId("1111");
 		deviceToken.setDeviceType("Android");
-		deviceToken.setDevicetoken("jhksdksdchlksjkjjgvhsxknhbcsd=");
+		deviceToken.setDeviceToken("jhksdksdchlksjkjjgvhsxknhbcsd=");
 		StatusDTO status = userService.updateDeviceToken(deviceToken);
 		doJsonize(status);
 		

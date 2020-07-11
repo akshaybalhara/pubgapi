@@ -19,7 +19,7 @@ public class DeviceTokenDTO implements Serializable{
 	/**
 	 * Device token for push notifications.
 	 */
-	private String devicetoken;
+	private String deviceToken;
 	/**
 	 * User Id.
 	 */
@@ -34,9 +34,9 @@ public class DeviceTokenDTO implements Serializable{
 	/**
 	 * Parameterized Constructor.
 	 */
-	public DeviceTokenDTO(String deviceType, String devicetoken, String userId){
+	public DeviceTokenDTO(String deviceType, String deviceToken, String userId){
 		this.deviceType 		= deviceType;
-		this.devicetoken		= devicetoken;
+		this.deviceToken		= deviceToken;
 		this.userId				= userId;
 	}
 
@@ -55,17 +55,17 @@ public class DeviceTokenDTO implements Serializable{
 	}
 
 	/**
-	 * @return the devicetoken
+	 * @return the deviceToken
 	 */
-	public String getDevicetoken() {
-		return devicetoken;
+	public String getDeviceToken() {
+		return deviceToken;
 	}
 
 	/**
-	 * @param devicetoken the devicetoken to set
+	 * @param devicetoken the deviceToken to set
 	 */
-	public void setDevicetoken(String devicetoken) {
-		this.devicetoken = devicetoken;
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class DeviceTokenDTO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "DeviceTokenDTO [deviceType=" + deviceType + ", devicetoken=" + devicetoken + ", userId=" + userId + "]";
+		return "DeviceTokenDTO [deviceType=" + deviceType + ", deviceToken=" + deviceToken + ", userId=" + userId + "]";
 	}
 
 }

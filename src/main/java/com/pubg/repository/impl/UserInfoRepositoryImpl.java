@@ -171,7 +171,7 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 		try {
 			UserEntity userEntity = (UserEntity) entityManager.createQuery(updateUserInfoQuery).getResultList().get(0);
 			userEntity.setDevice(deviceTokenDto.getDeviceType());
-			userEntity.setDeviceToken(deviceTokenDto.getDevicetoken());
+			userEntity.setDeviceToken(deviceTokenDto.getDeviceToken());
 			//Start of transaction
 			entityTransaction.begin();
 			//merge method is used to update entities into their DB table.
