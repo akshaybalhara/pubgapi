@@ -81,10 +81,6 @@ public class AdminRepositoryImpl implements AdminRepository,MessageConstants{
 			entity.setDateAndTime(matchesDTO.getDateAndTime());
 			entity.setSubmissionDate(new Date());
 			break;
-//		case "Update":
-//			break;
-//		case "Delete":
-//			break;
 		}
 		logger.info("Exiting AdminRepositoryImpl.updateMatchesEntity()");
 		return entity;

@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pubg.dto.StatusDTO;
+import com.pubg.entity.JoinedMatchesEntity;
 import com.pubg.entity.MatchesEntity;
 import com.pubg.messages.constants.MessageConstants;
 import com.pubg.repository.MatchesRepository;
@@ -38,6 +40,31 @@ public class MatchesServiceImpl  extends BaseService implements MatchesService, 
 		List<MatchesEntity> matches = matchesRepository.getAllMatches(leagueType);
 		logger.info("Exiting MatchesServiceImpl.listAllMatches()");
 		return matches;
+	}
+
+	@Override
+	public MatchesEntity getMatchById(String matchId) {
+		logger.info("Entering into MatchesServiceImpl.getMatchById()");
+		MatchesEntity match = matchesRepository.getMatchDetails(matchId);
+		logger.info("Exiting MatchesServiceImpl.getMatchById()");
+		return match;
+	}
+
+	@Override
+	public List<String> getParticipants(String matchId) {
+		logger.info("Entering into MatchesServiceImpl.getParticipants()");
+		List<String> participants = matchesRepository.getParticipantsList(matchId);
+		logger.info("Exiting MatchesServiceImpl.getParticipants()");
+		return participants;
+	}
+
+	@Override
+	public StatusDTO joinAMatch(JoinedMatchesEntity request) {
+		logger.info("Entering into MatchesServiceImpl.joinAMatch()");
+		matchesRepository.joinMatch(request);
+		StatusDTO statusDTO = new StatusDTO(true, "JON_001", "Successfully joined the match.");
+		logger.info("Exiting MatchesServiceImpl.joinAMatch()");
+		return statusDTO;
 	}
 
 }

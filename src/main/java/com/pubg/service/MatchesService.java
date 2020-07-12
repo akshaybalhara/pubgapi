@@ -2,6 +2,8 @@ package com.pubg.service;
 
 import java.util.List;
 
+import com.pubg.dto.StatusDTO;
+import com.pubg.entity.JoinedMatchesEntity;
 import com.pubg.entity.MatchesEntity;
 
 /**
@@ -15,4 +17,10 @@ import com.pubg.entity.MatchesEntity;
 public interface MatchesService {	
 	
 	public List<MatchesEntity> listAllMatches(String leagueType);
+
+	public MatchesEntity getMatchById(String matchId);
+
+	public List<String> getParticipants(String matchId);
+
+	public StatusDTO joinAMatch(JoinedMatchesEntity request);
 }
