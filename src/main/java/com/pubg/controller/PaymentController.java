@@ -1,7 +1,14 @@
 package com.pubg.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
+import java.util.Map;
 import java.util.TreeMap;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +58,44 @@ public class PaymentController {
 	private String getCheckSum(TreeMap<String, String> parameters) throws Exception {
 		return CheckSumServiceHelper.getCheckSumServiceHelper().genrateCheckSum("R@yj&DfNeE3TPTP6", parameters);
 	}
+	
+	@PostMapping(value = "/pgresponse")
+    public void getResponseRedirect(HttpServletRequest request,HttpServletResponse httpServletResponse, Model model) throws UnsupportedEncodingException {
+
+        Map<String, String[]> mapData = request.getParameterMap();
+        TreeMap<String, String> parameters = new TreeMap<String, String>();
+        mapData.forEach((key, val) -> parameters.put(key, val[0]));
+        String paytmChecksum = "";
+        if (mapData.containsKey("CHECKSUMHASH")) {
+            paytmChecksum = mapData.get("CHECKSUMHASH")[0];
+        }
+        String result;
+
+        boolean isValideChecksum = false;
+        System.out.println("RESULT : "+parameters.toString());
+        try {
+            isValideChecksum = validateCheckSum(parameters, paytmChecksum);
+            if (isValideChecksum && parameters.containsKey("RESPCODE")) {
+                if (parameters.get("RESPCODE").equals("01")) {
+                    result = "Payment Successful";
+                } else {
+                    result = "Payment Failed";
+                }
+            } else {
+                result = "Checksum mismatched";
+            }
+        } catch (Exception e) {
+            result = e.toString();
+        }
+        model.addAttribute("result",result);
+        parameters.remove("CHECKSUMHASH");
+        model.addAttribute("parameters",parameters);
+        
+        httpServletResponse.setStatus(302);
+        String redirectUrl = "http://localhost:8100/wallet?mapData="+Base64.getEncoder().encodeToString(parameters.toString().getBytes("utf-8"))+"&result="+result;
+        httpServletResponse.setHeader("Location", redirectUrl);
+        //return "redirect:" + redirectUrl;
+    }
 
 
 
