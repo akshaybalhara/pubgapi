@@ -10,8 +10,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubg.ApplicationConfiguration;
-import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
+import com.pubg.dto.ResetPasswordDTO;
 import com.pubg.dto.StatusDTO;
 import com.pubg.entity.UserEntity;
 import com.pubg.service.UserService;
@@ -68,11 +68,11 @@ public class UserServiceTest {
 
 	private static void testChangePassword(AnnotationConfigApplicationContext ctx) {
 		UserService userService = ctx.getBean(UserService.class); 
-		ChangePasswordDTO changePass = new ChangePasswordDTO();
-		changePass.setEmployeeId("1111");
+		ResetPasswordDTO changePass = new ResetPasswordDTO();
+		changePass.setUserId("1111");
 		//changePass.setOldPassword("1111");
 		changePass.setNewPassword("2222");
-		StatusDTO status = userService.processForgotPassword(changePass.getEmployeeId(), changePass.getNewPassword());
+		StatusDTO status = userService.processForgotPassword(changePass.getUserId(), changePass.getNewPassword());
 		doJsonize(status);
 		
 	}

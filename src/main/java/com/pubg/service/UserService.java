@@ -1,7 +1,7 @@
 package com.pubg.service;
 
-import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
+import com.pubg.dto.ResetPasswordDTO;
 import com.pubg.dto.StatusDTO;
 import com.pubg.entity.AppUpdateEntity;
 import com.pubg.entity.RegistrationEntity;
@@ -48,7 +48,7 @@ public interface UserService {
 	 * @param changePassword
 	 * @return
 	 */
-	public StatusDTO changePassword(ChangePasswordDTO changePassword);
+	public StatusDTO changePassword(ResetPasswordDTO changePassword);
 
 	/**
 	 * updateDeviceToken updates the device token for push notifications.

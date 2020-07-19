@@ -53,6 +53,9 @@ public class RegistrationEntity {
 	
 	@Column(name="submissionDate")
     private Date submissionDate;
+	
+	@Column(name="resetPin")
+    private String resetPin;
 
 	/**
 	 * @return the userId
@@ -220,6 +223,20 @@ public class RegistrationEntity {
 	 */
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	/**
+	 * @return the resetPin
+	 */
+	public String getResetPin() {
+		return resetPin;
+	}
+
+	/**
+	 * @param resetPin the resetPin to set
+	 */
+	public void setResetPin(String resetPin) {
+		this.resetPin = resetPin;
 	}
 
 	@Override

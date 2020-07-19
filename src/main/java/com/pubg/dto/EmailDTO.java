@@ -20,6 +20,8 @@ public class EmailDTO implements Serializable{
 	
 	private String userId;
 	
+	private String data;
+	
 	/**
 	 * Empty Constructor.
 	 */
@@ -96,6 +98,20 @@ public class EmailDTO implements Serializable{
 	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	/**
+	 * @return the data
+	 */
+	public String getData() {
+		return data;
+	}
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(String data) {
+		this.data = data;
 	}
 
 	@Override

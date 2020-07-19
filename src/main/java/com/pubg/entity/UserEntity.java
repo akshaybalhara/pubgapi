@@ -60,6 +60,9 @@ public class UserEntity {
 	@Column(name="submissionDate")
     private Date submissionDate;
 	
+	@Column(name="resetPin")
+    private String resetPin;
+	
 	@Transient
 	@JsonProperty("statusDto")
 	private StatusDTO statusDto;
@@ -261,6 +264,20 @@ public class UserEntity {
 	 */
 	public void setDeviceToken(String deviceToken) {
 		this.deviceToken = deviceToken;
+	}
+	
+	/**
+	 * @return the resetPin
+	 */
+	public String getResetPin() {
+		return resetPin;
+	}
+
+	/**
+	 * @param resetPin the resetPin to set
+	 */
+	public void setResetPin(String resetPin) {
+		this.resetPin = resetPin;
 	}
 
 	@Override

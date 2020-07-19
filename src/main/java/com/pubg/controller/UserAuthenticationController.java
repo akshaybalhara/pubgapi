@@ -1,8 +1,14 @@
 package com.pubg.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -18,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.pubg.config.JwtTokenUtil;
 import com.pubg.dto.DeviceTokenDTO;
+import com.pubg.dto.EmailDTO;
 import com.pubg.dto.StatusDTO;
 import com.pubg.dto.UserDTO;
 import com.pubg.entity.AppUpdateEntity;
@@ -25,6 +32,7 @@ import com.pubg.entity.UserEntity;
 import com.pubg.exception.PUBGBusinessException;
 import com.pubg.messages.constants.MessageConstants;
 import com.pubg.service.UserService;
+import com.pubg.service.UtilService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -65,6 +73,12 @@ public class UserAuthenticationController implements MessageConstants {
 	 */
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	/**
+	 * UserService will be injected by Spring Framework.
+	 */
+	@Autowired
+	private UtilService utilService;
 	
 	/**
 	 * ping method is used to validate the connectivity
@@ -122,21 +136,77 @@ public class UserAuthenticationController implements MessageConstants {
 	 * @param userName
 	 * @return
 	 */
+	@Operation(summary = "Generate a link to reset password.", description = "User can generate a link and request to reset his/her password.", tags = { "UserAuthentication" })
+	@ApiResponses(value = { 
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = String.class,hidden = true)))})
+	@RequestMapping(value = "/forgotPassword/{userId}", method=RequestMethod.POST)
+	public StatusDTO processForgotPassword(@PathVariable String userId) {
+		logger.info("Entering UserAuthenticationController.processForgotPassword() method.");
+		UserEntity user = userService.getUserProfile(userId);
+		String resetPasswordLink ="";
+		StatusDTO status = null;
+		if(user!=null && !user.getEmail().isEmpty()) {
+			int pin = (int)(Math.random()*9000+1000);
+			resetPasswordLink = "http://3.128.4.163:8080/pubgroom-api/user-auth/resetPassword/"+userId+"/"+pin;
+			EmailDTO emailRequest = new EmailDTO(user.getEmail(), "Reset password of your account", "<h1>Reset password by clicking below link or ignore if it's not you.</h1><br><a href=\""
+					+resetPasswordLink+"\"> Click here to reset password of your account </a><br><br>Regards,<br>PUBG Rooms Team");
+			emailRequest.setUserId(userId);
+			emailRequest.setData(Integer.toString(pin));
+			utilService.sendEmailWithAttachment(emailRequest,"ResetPassword");
+			status = new StatusDTO(true, "RST_001", "Successfully sent password reset link to your registered email.");
+		}
+		logger.info("Exiting UserAuthenticationController.processForgotPassword() method.");
+		return status;
+	}
+	
+	/**
+	 * processForgotPassword used to change the old password.
+	 * 
+	 * @param userName
+	 * @return
+	 */
 	@Operation(summary = "Reset forgot password", description = "User can reset his/her forgotten password using this service.", tags = { "UserAuthentication" })
 	@ApiResponses(value = { 
 	        @ApiResponse(responseCode = "200", description = "OK",
 	                content = @Content(schema = @Schema(implementation = ModelAndView.class,hidden = true)))})
-	@RequestMapping(value = "/resetPassword/{employeeId}", method=RequestMethod.GET)
-	public ModelAndView processResetPassword(@PathVariable String employeeId) {
+	@RequestMapping(value = "/resetPassword/{userId}/{pin}", method=RequestMethod.GET)
+	public ModelAndView processResetPassword(@PathVariable String userId, @PathVariable String pin) {
 		logger.info("Entering UserAuthenticationController.processResetPassword() method.");
 		ModelAndView modelAndView = new ModelAndView("forgotPassword");
-		modelAndView.addObject("employeeId", employeeId);
-		String pin = ""+((int)(Math.random()*9000)+1000);
+		modelAndView.addObject("userId", userId);
 		modelAndView.addObject("pin", pin);
-		StatusDTO status = userService.processForgotPassword(employeeId, pin);
-		modelAndView.addObject("status", status.getStatusMessage());
 		logger.info("Exiting UserAuthenticationController.processResetPassword() method.");
 		return modelAndView;
+	}
+	
+	/**
+	 * processForgotPassword used to change the old password.
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	@Operation(summary = "Update password.", description = "Update password.", tags = { "UserAuthentication" })
+	@ApiResponses(value = { 
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = String.class,hidden = true)))})
+	@RequestMapping(value = "/updatePassword", produces = { MediaType.APPLICATION_JSON_VALUE }, method=RequestMethod.POST)
+	public @ResponseBody StatusDTO updatePassword(@RequestBody String passResetReq) {
+		logger.info("Entering UserAuthenticationController.updatePassword() method.");
+		StatusDTO status = null;
+		try {
+			System.out.println(passResetReq);
+			Map<String, String> businessDataMap = formatDataInKeyValuePairs(passResetReq);
+			UserEntity user = userService.getUserProfile(businessDataMap.get("userId"));
+			if(user!=null && user.getResetPin().equals(businessDataMap.get("pin")) && user.getUserId().equals(businessDataMap.get("userId"))) {
+				status = userService.processForgotPassword(user.getUserId(), businessDataMap.get("newPassword"));
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		logger.info("Exiting UserAuthenticationController.updatePassword() method.");
+		return status;
 	}
 	
 	/**
@@ -152,6 +222,16 @@ public class UserAuthenticationController implements MessageConstants {
 		StatusDTO statusDTO = userService.updateDeviceToken(deviceTokenDto);
 		logger.info("Exiting UserAuthenticationController.updateDeviceToken() method.");
 		return 	statusDTO;
+	}
+	
+	public static Map<String, String> formatDataInKeyValuePairs(String serializedData) throws UnsupportedEncodingException {
+	    Map<String, String> data_pairs = new LinkedHashMap<String, String>();
+	    String[] pairs = serializedData.split("&");
+	    for (String pair : pairs) {
+	        int idx = pair.indexOf("=");
+	        data_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+	    }
+	    return data_pairs;
 	}
 	
 	

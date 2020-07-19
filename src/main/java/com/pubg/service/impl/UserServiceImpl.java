@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
+import com.pubg.dto.ResetPasswordDTO;
 import com.pubg.dto.StatusDTO;
 import com.pubg.entity.AppUpdateEntity;
 import com.pubg.entity.RegistrationEntity;
@@ -43,9 +43,9 @@ public class UserServiceImpl  extends BaseService implements UserService, Messag
 	 * @return
 	 */
 	@Override
-	public StatusDTO processForgotPassword(String empId,String pin) {
-		ChangePasswordDTO changePassword = new ChangePasswordDTO();
-		changePassword.setEmployeeId(empId);
+	public StatusDTO processForgotPassword(String userId,String pin) {
+		ResetPasswordDTO changePassword = new ResetPasswordDTO();
+		changePassword.setUserId(userId);
 		changePassword.setNewPassword(pin);
 		userInfoRepository.updateProfilePassword(changePassword,true);
 		StatusDTO status = new StatusDTO(true,"PASS_001","Your password updated successfully.");
@@ -83,7 +83,7 @@ public class UserServiceImpl  extends BaseService implements UserService, Messag
 	 * @return
 	 */
 	@Override
-	public StatusDTO changePassword(ChangePasswordDTO changePassword) {
+	public StatusDTO changePassword(ResetPasswordDTO changePassword) {
 		userInfoRepository.updateProfilePassword(changePassword,false);
 		StatusDTO status = new StatusDTO(true,"","");
 		return status;

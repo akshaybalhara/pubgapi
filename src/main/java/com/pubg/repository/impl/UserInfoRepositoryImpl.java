@@ -9,8 +9,8 @@ import javax.persistence.PersistenceUnit;
 
 import org.springframework.stereotype.Repository;
 
-import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
+import com.pubg.dto.ResetPasswordDTO;
 import com.pubg.entity.AppUpdateEntity;
 import com.pubg.entity.RegistrationEntity;
 import com.pubg.entity.UserEntity;
@@ -114,20 +114,20 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 	 * @return
 	 */
 	@Override
-	public void updateProfilePassword(ChangePasswordDTO changePassword, boolean isForgotPassword) {
-		UserEntity userEntity = getUserDetails(changePassword.getEmployeeId());
-		String oldEncryptedPassword ="";
+	public void updateProfilePassword(ResetPasswordDTO changePassword, boolean isForgotPassword) {
+		UserEntity userEntity = getUserDetails(changePassword.getUserId());
+		//String oldEncryptedPassword ="";
 		String newEncryptedPassword ="";
-		if(null!=changePassword.getOldPassword() && !changePassword.getOldPassword().isEmpty()){
+		/*if(null!=changePassword.getOldPassword() && !changePassword.getOldPassword().isEmpty()){
 			oldEncryptedPassword = PUBGGeneralUtils.getEncryptedText(changePassword.getOldPassword());
-		}
+		}*/
 		if(null!=changePassword.getNewPassword() && !changePassword.getNewPassword().isEmpty()){
 			newEncryptedPassword = PUBGGeneralUtils.getEncryptedText(changePassword.getNewPassword());
 		}
 		
-		if(!isForgotPassword && userEntity.getPassword().equals(oldEncryptedPassword) && !newEncryptedPassword.isEmpty()) {
+		/*if(!isForgotPassword && userEntity.getPassword().equals(oldEncryptedPassword) && !newEncryptedPassword.isEmpty()) {
 			updatePassword(userEntity, newEncryptedPassword);
-		}else if(isForgotPassword && null!=userEntity){
+		}else*/ if(isForgotPassword && null!=userEntity){
 			updatePassword(userEntity, newEncryptedPassword);
 		}else {
 			throw new PUBGBusinessException(INVALID_OLD_PASS_CODE, INVALID_OLD_PASS_MSG);

@@ -2,8 +2,8 @@ package com.pubg.repository;
 
 import org.springframework.stereotype.Repository;
 
-import com.pubg.dto.ChangePasswordDTO;
 import com.pubg.dto.DeviceTokenDTO;
+import com.pubg.dto.ResetPasswordDTO;
 import com.pubg.entity.AppUpdateEntity;
 import com.pubg.entity.RegistrationEntity;
 import com.pubg.entity.UserEntity;
@@ -32,7 +32,7 @@ public interface UserInfoRepository {
 	 * @param isForgotPassword
 	 * @return
 	 */
-	public void updateProfilePassword(ChangePasswordDTO changePassword, boolean isForgotPassword);
+	public void updateProfilePassword(ResetPasswordDTO changePassword, boolean isForgotPassword);
 	
 	/**
 	 * updateDeviceToken updates the device token for push notifications.

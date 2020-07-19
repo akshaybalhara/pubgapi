@@ -58,13 +58,33 @@ public class UtilServiceImpl extends BaseService implements UtilService {
 			e.printStackTrace();
 		}
 		
-		if(mailSent) {
+		if(mailSent && appType.equalsIgnoreCase("Registration")) {
 			String updateVerificationLinkStatus = "FROM RegistrationEntity where userId = '"+emailRequest.getUserId()+"'";
 			EntityManager entityManager = entityManagerFactory.createEntityManager();
 			EntityTransaction entityTransaction = entityManager.getTransaction();
 			try {
 				RegistrationEntity userEntity = (RegistrationEntity) entityManager.createQuery(updateVerificationLinkStatus).getResultList().get(0);
 				userEntity.setVerificationLink("Sent");
+				//Start of transaction
+				entityTransaction.begin();
+				//merge method is used to update entities into their DB table.
+				entityManager.merge(userEntity);
+				entityTransaction.commit();
+			}catch(RuntimeException e) {
+				e.printStackTrace();
+			}finally {
+				entityManager.clear();
+				entityManager.close();
+			}
+		}
+		
+		if(mailSent && appType.equalsIgnoreCase("ResetPassword")) {
+			String updateResetPin = "FROM RegistrationEntity where userId = '"+emailRequest.getUserId()+"'";
+			EntityManager entityManager = entityManagerFactory.createEntityManager();
+			EntityTransaction entityTransaction = entityManager.getTransaction();
+			try {
+				RegistrationEntity userEntity = (RegistrationEntity) entityManager.createQuery(updateResetPin).getResultList().get(0);
+				userEntity.setResetPin(emailRequest.getData());
 				//Start of transaction
 				entityTransaction.begin();
 				//merge method is used to update entities into their DB table.
