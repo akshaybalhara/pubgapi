@@ -1,6 +1,7 @@
 package com.pubg.repository.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -255,8 +256,12 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 		String updateAccountStatus = "FROM RegistrationEntity where email = '"+email+"'";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		if(entityManager.createQuery(updateAccountStatus).getResultList().size() > 0) {
+			entityManager.clear();
+			entityManager.close();
 			return true;
 		}else {
+			entityManager.clear();
+			entityManager.close();
 			return false;
 		}
 		
@@ -269,8 +274,12 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 		String updateAccountStatus = "FROM RegistrationEntity where phone = '"+phone+"'";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		if(entityManager.createQuery(updateAccountStatus).getResultList().size() > 0) {
+			entityManager.clear();
+			entityManager.close();
 			return true;
 		}else {
+			entityManager.clear();
+			entityManager.close();
 			return false;
 		}
 		
@@ -283,8 +292,12 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 		String updateAccountStatus = "FROM RegistrationEntity where userId = '"+userId+"'";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		if(entityManager.createQuery(updateAccountStatus).getResultList().size() > 0) {
+			entityManager.clear();
+			entityManager.close();
 			return true;
 		}else {
+			entityManager.clear();
+			entityManager.close();
 			return false;
 		}
 		
@@ -292,13 +305,22 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public AppUpdateEntity checkAppVersion() {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		String query = "SELECT COALESCE(MAX(id),1) FROM AppUpdateEntity";
 		int id = (int) entityManager.createQuery(query).getResultList().get(0);
 		query = "FROM AppUpdateEntity where id = "+id;
-		AppUpdateEntity appUpdateEntity = (AppUpdateEntity) entityManager.createQuery(query).getResultList().get(0);
+		List<AppUpdateEntity> list = (List<AppUpdateEntity>) entityManager.createQuery(query).getResultList();
+		AppUpdateEntity appUpdateEntity = new AppUpdateEntity();
+		if(list.size() > 0) {
+			appUpdateEntity = list.get(0);
+		}else {
+			appUpdateEntity.setAppUrl("#");
+			appUpdateEntity.setAppVersion(0);
+			appUpdateEntity.setId(0);
+		}
 		entityManager.clear();
 		entityManager.close(); 
 		return appUpdateEntity;

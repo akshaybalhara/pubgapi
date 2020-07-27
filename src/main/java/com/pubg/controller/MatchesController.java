@@ -71,12 +71,12 @@ public class MatchesController {
 	@ApiResponses(value = { 
 	        @ApiResponse(responseCode = "200", description = "OK",
 	                content = @Content(schema = @Schema(implementation = MatchesEntity.class,hidden = true)))})
-	@RequestMapping(value = "/list-matches/{leagueType}", method=RequestMethod.GET)
-	public  @ResponseBody List<MatchesEntity> getAllMatches(@PathVariable String leagueType){
+	@RequestMapping(value = "/list-matches", method=RequestMethod.GET)
+	public  @ResponseBody List<MatchesEntity> getAllMatches(){
 		logger.info("Entering MatchesController.getAllMatches() method.");
 		List<MatchesEntity> matches = new ArrayList<MatchesEntity>();
 		try {
-			matches = matchesService.listAllMatches(leagueType);
+			matches = matchesService.listAllMatches();
 		} catch (DisabledException e) {
 			throw new PUBGBusinessException("USER_DISABLED", e.getMessage());
 		} catch (BadCredentialsException e) {
@@ -150,6 +150,28 @@ public class MatchesController {
 		}
 		logger.info("Exiting MatchesController.joinMatch() method.");
 		return 	statusDTO;
+	}
+	
+	/**
+	 * Checks if user already joined this match.
+	 */
+	@Operation(summary = "Checks if user already joined this match.", description = "Checks if user already joined this match.", tags = { "Matches" })
+	@ApiResponses(value = { 
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = StatusDTO.class,hidden = true)))})
+	@RequestMapping(value = "/alreadyJoined/{userId}/{matchId}", method=RequestMethod.GET)
+	public  @ResponseBody StatusDTO isAlreadyJoined(@PathVariable String userId, @PathVariable String matchId){
+		logger.info("Entering MatchesController.isAlreadyJoined() method.");
+		StatusDTO status = new StatusDTO();
+		try {
+			status = matchesService.checkAlreadyJoined(userId,matchId);
+		} catch (DisabledException e) {
+			throw new PUBGBusinessException("USER_DISABLED", e.getMessage());
+		} catch (BadCredentialsException e) {
+			throw new PUBGBusinessException(MessageConstants.SOMETHING_WENT_WRONG,MessageConstants.SOMETHING_WENT_WRONG_MSG);
+		}
+		logger.info("Exiting MatchesController.isAlreadyJoined() method.");
+		return 	status;
 	}
 	
 }

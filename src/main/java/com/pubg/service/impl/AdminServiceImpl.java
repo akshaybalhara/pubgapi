@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.pubg.dto.MatchesDTO;
 import com.pubg.dto.StatusDTO;
+import com.pubg.dto.WalletDTO;
+import com.pubg.entity.WalletEntity;
 import com.pubg.exception.PUBGBusinessException;
 import com.pubg.messages.constants.MessageConstants;
 import com.pubg.repository.AdminRepository;
@@ -33,9 +35,7 @@ public class AdminServiceImpl extends BaseService implements AdminService,Messag
 
 	@Override
 	public StatusDTO processMatches(MatchesDTO matchesDTO) {
-		// TODO Auto-generated method stub
-		
-		logger.info("Entering AnnualTrvlAlwnceServiceImpl.processAnnualTravelAllowanceRequest() method.");
+		logger.info("Entering AdminServiceImpl.processMatches() method.");
 		StatusDTO status = null;
 		if(matchesDTO!=null && matchesDTO.getOperation()!=null){
 			String operation = matchesDTO.getOperation();
@@ -44,20 +44,34 @@ public class AdminServiceImpl extends BaseService implements AdminService,Messag
 				adminRepository.insertMatch(matchesDTO);
 				status = new StatusDTO(true,ADMIN_INSERT_MATCH_CODE,ADMIN_INSERT_MATCH_MSG);
 				break;
-//			case "Delete":
-//				annualTrvlAlwnceRepository.updateMatch();
-//				status = new StatusDTO(true,ANNUAL_TRVL_RECOMMENDED_CODE,ANNUAL_TRVL_RECOMMENDED_MSG);
-//				break;	
-//			case "Update":
-//				annualTrvlAlwnceRepository.updateAnnualTravelAllowanceDetails(annualTrvlAlwnce);
-//				status = new StatusDTO(true,ANNUAL_TRVL_ACCEPTED_CODE,ANNUAL_TRVL_ACCEPTED_MSG);
-//				break;			
+			case "Update":
+				adminRepository.updateMatch(matchesDTO);
+				status = new StatusDTO(true,"AIM_002","Match updated successfully.");
+				break;
 			default:
 				throw new PUBGBusinessException(SOMETHING_WENT_WRONG, SOMETHING_WENT_WRONG_MSG);
 			}			
 		}
-		logger.info("Exiting AnnualTrvlAlwnceServiceImpl.processAnnualTravelAllowanceRequest() method.");
+		logger.info("Exiting AdminServiceImpl.processMatches() method.");
 		return status;
+	}
+
+	@Override
+	public StatusDTO updateWallet(WalletDTO walletDTO) {
+		logger.info("Entering AdminServiceImpl.updateWallet().");
+		StatusDTO status = null;
+		adminRepository.updateBalance(walletDTO);
+		status = new StatusDTO(true,"WAL_001","Balance updated successfully.");
+		logger.info("Exiting AdminServiceImpl.updateWallet().");
+		return status;
+	}
+
+	@Override
+	public WalletEntity getWalletBalance(String userId) {
+		logger.info("Entering AdminServiceImpl.getWalletBalance().");
+		WalletEntity entity = adminRepository.getBalance(userId);
+		logger.info("Entering AdminServiceImpl.getWalletBalance().");
+		return entity;
 	}
 	
 }

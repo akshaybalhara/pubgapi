@@ -5,14 +5,11 @@ package com.pubg.dto;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 
-/**
- * @author Anigam
- *
- */
 public class MatchesDTO {
 
+	private int matchId;
+	
     private int entryFee;
 	
     private int firstPrize;
@@ -20,14 +17,22 @@ public class MatchesDTO {
     private int secondPrize;
 	
     private int thirdPrize;
+    
+    private int fourToFifthPrize;
+	
+    private int sixthToTenthPrize;
+	
+    private int ElevenToFifteenPrize;
+	
+    private int SixteenToTwentyPrize;
+    
+    private int roomSize;
 	
     private int perKill;
 	
     private String matchType;
 	
     private String map;
-	
-    private String leagueType;
 	
     private String status;
 	
@@ -136,20 +141,6 @@ public class MatchesDTO {
 	}
 
 	/**
-	 * @return the leagueType
-	 */
-	public String getLeagueType() {
-		return leagueType;
-	}
-
-	/**
-	 * @param leagueType the leagueType to set
-	 */
-	public void setLeagueType(String leagueType) {
-		this.leagueType = leagueType;
-	}
-
-	/**
 	 * @return the status
 	 */
 	public String getStatus() {
@@ -205,15 +196,98 @@ public class MatchesDTO {
 		this.operation = operation;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * @return the roomSize
 	 */
+	public int getRoomSize() {
+		return roomSize;
+	}
+
+	/**
+	 * @param roomSize the roomSize to set
+	 */
+	public void setRoomSize(int roomSize) {
+		this.roomSize = roomSize;
+	}
+
+	/**
+	 * @return the matchId
+	 */
+	public int getMatchId() {
+		return matchId;
+	}
+
+	/**
+	 * @param matchId the matchId to set
+	 */
+	public void setMatchId(int matchId) {
+		this.matchId = matchId;
+	}
+
+	/**
+	 * @return the fourToFifthPrize
+	 */
+	public int getFourToFifthPrize() {
+		return fourToFifthPrize;
+	}
+
+	/**
+	 * @param fourToFifthPrize the fourToFifthPrize to set
+	 */
+	public void setFourToFifthPrize(int fourToFifthPrize) {
+		this.fourToFifthPrize = fourToFifthPrize;
+	}
+
+	/**
+	 * @return the sixthToTenthPrize
+	 */
+	public int getSixthToTenthPrize() {
+		return sixthToTenthPrize;
+	}
+
+	/**
+	 * @param sixthToTenthPrize the sixthToTenthPrize to set
+	 */
+	public void setSixthToTenthPrize(int sixthToTenthPrize) {
+		this.sixthToTenthPrize = sixthToTenthPrize;
+	}
+
+	/**
+	 * @return the elevenToFifteenPrize
+	 */
+	public int getElevenToFifteenPrize() {
+		return ElevenToFifteenPrize;
+	}
+
+	/**
+	 * @param elevenToFifteenPrize the elevenToFifteenPrize to set
+	 */
+	public void setElevenToFifteenPrize(int elevenToFifteenPrize) {
+		ElevenToFifteenPrize = elevenToFifteenPrize;
+	}
+
+	/**
+	 * @return the sixteenToTwentyPrize
+	 */
+	public int getSixteenToTwentyPrize() {
+		return SixteenToTwentyPrize;
+	}
+
+	/**
+	 * @param sixteenToTwentyPrize the sixteenToTwentyPrize to set
+	 */
+	public void setSixteenToTwentyPrize(int sixteenToTwentyPrize) {
+		SixteenToTwentyPrize = sixteenToTwentyPrize;
+	}
+
 	@Override
 	public String toString() {
-		return "MatchesDTO [entryFee=" + entryFee + ", firstPrize=" + firstPrize + ", secondPrize=" + secondPrize
-				+ ", thirdPrize=" + thirdPrize + ", perKill=" + perKill + ", matchType=" + matchType + ", map=" + map
-				+ ", leagueType=" + leagueType + ", status=" + status + ", dateAndTime=" + dateAndTime
-				+ ", createdDate=" + createdDate + ", operation=" + operation + "]";
+		return "MatchesDTO [matchId=" + matchId + ", entryFee=" + entryFee + ", firstPrize=" + firstPrize
+				+ ", secondPrize=" + secondPrize + ", thirdPrize=" + thirdPrize + ", fourToFifthPrize="
+				+ fourToFifthPrize + ", sixthToTenthPrize=" + sixthToTenthPrize + ", ElevenToFifteenPrize="
+				+ ElevenToFifteenPrize + ", SixteenToTwentyPrize=" + SixteenToTwentyPrize + ", roomSize=" + roomSize
+				+ ", perKill=" + perKill + ", matchType=" + matchType + ", map=" + map + ", status=" + status
+				+ ", dateAndTime=" + dateAndTime + ", createdDate=" + createdDate + ", operation=" + operation + "]";
 	}
     
 }

@@ -47,6 +47,13 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+		    <groupId>com.paytm.pg</groupId>
+		    <artifactId>checksum_paytm</artifactId>
+		    <version>2.0</version>
+		    <scope>system</scope>
+		    <systemPath>${basedir}/src/main/resources/lib/checksum_2.0.0.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -116,6 +123,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+				    <includeSystemScope>true</includeSystemScope>
+				  </configuration>
 			</plugin>
 		</plugins>
 	</build>

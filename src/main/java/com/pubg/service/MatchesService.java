@@ -16,11 +16,13 @@ import com.pubg.entity.MatchesEntity;
  */
 public interface MatchesService {	
 	
-	public List<MatchesEntity> listAllMatches(String leagueType);
+	public List<MatchesEntity> listAllMatches();
 
 	public MatchesEntity getMatchById(String matchId);
 
 	public List<String> getParticipants(String matchId);
 
 	public StatusDTO joinAMatch(JoinedMatchesEntity request);
+
+	public StatusDTO checkAlreadyJoined(String userId, String matchId);
 }

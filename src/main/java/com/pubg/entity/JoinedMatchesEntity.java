@@ -28,20 +28,11 @@ public class JoinedMatchesEntity {
 	@Column(name="matchId")
     private int matchId;
 	
-	@Column(name="rank")
-    private int rank;
-	
-	@Column(name="kills")
-    private int kills;
-	
 	@Column(name="feeStatus")
     private String feeStatus;
 	
-	@Column(name="win_amount")
-    private int winningAmount;
-	
-	@Column(name="payment")
-    private String paymentToUser;
+	@Column(name="status")
+    private String status;
 	
 	@Column(name="submissionDate")
     private Date submissionDate;
@@ -75,34 +66,6 @@ public class JoinedMatchesEntity {
 	}
 
 	/**
-	 * @return the rank
-	 */
-	public int getRank() {
-		return rank;
-	}
-
-	/**
-	 * @param rank the rank to set
-	 */
-	public void setRank(int rank) {
-		this.rank = rank;
-	}
-
-	/**
-	 * @return the kills
-	 */
-	public int getKills() {
-		return kills;
-	}
-
-	/**
-	 * @param kills the kills to set
-	 */
-	public void setKills(int kills) {
-		this.kills = kills;
-	}
-
-	/**
 	 * @return the feeStatus
 	 */
 	public String getFeeStatus() {
@@ -117,31 +80,17 @@ public class JoinedMatchesEntity {
 	}
 
 	/**
-	 * @return the winningAmount
+	 * @return the status
 	 */
-	public int getWinningAmount() {
-		return winningAmount;
+	public String getStatus() {
+		return status;
 	}
 
 	/**
-	 * @param winningAmount the winningAmount to set
+	 * @param status the status to set
 	 */
-	public void setWinningAmount(int winningAmount) {
-		this.winningAmount = winningAmount;
-	}
-
-	/**
-	 * @return the paymentToUser
-	 */
-	public String getPaymentToUser() {
-		return paymentToUser;
-	}
-
-	/**
-	 * @param paymentToUser the paymentToUser to set
-	 */
-	public void setPaymentToUser(String paymentToUser) {
-		this.paymentToUser = paymentToUser;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	/**
@@ -160,9 +109,8 @@ public class JoinedMatchesEntity {
 
 	@Override
 	public String toString() {
-		return "JoinedMatchesEntity [userId=" + userId + ", matchId=" + matchId + ", rank=" + rank + ", kills=" + kills
-				+ ", feeStatus=" + feeStatus + ", winningAmount=" + winningAmount + ", paymentToUser=" + paymentToUser
-				+ ", submissionDate=" + submissionDate + "]";
+		return "JoinedMatchesEntity [userId=" + userId + ", matchId=" + matchId + ", feeStatus=" + feeStatus
+				+ ", status=" + status + ", submissionDate=" + submissionDate + "]";
 	}
 
 }

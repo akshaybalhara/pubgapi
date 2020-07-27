@@ -35,9 +35,9 @@ public class MatchesServiceImpl  extends BaseService implements MatchesService, 
 	private MatchesRepository matchesRepository;
 
 	@Override
-	public List<MatchesEntity> listAllMatches(String leagueType) {
+	public List<MatchesEntity> listAllMatches() {
 		logger.info("Entering into MatchesServiceImpl.listAllMatches()");
-		List<MatchesEntity> matches = matchesRepository.getAllMatches(leagueType);
+		List<MatchesEntity> matches = matchesRepository.getAllMatches();
 		logger.info("Exiting MatchesServiceImpl.listAllMatches()");
 		return matches;
 	}
@@ -64,6 +64,15 @@ public class MatchesServiceImpl  extends BaseService implements MatchesService, 
 		matchesRepository.joinMatch(request);
 		StatusDTO statusDTO = new StatusDTO(true, "JON_001", "Successfully joined the match.");
 		logger.info("Exiting MatchesServiceImpl.joinAMatch()");
+		return statusDTO;
+	}
+
+	@Override
+	public StatusDTO checkAlreadyJoined(String userId, String matchId) {
+		logger.info("Entering into MatchesServiceImpl.checkAlreadyJoined()");
+		boolean flag = matchesRepository.isAlreadyJoinedMatch(userId,matchId);
+		StatusDTO statusDTO = new StatusDTO(flag, "AJN_001", "Successfully checked");
+		logger.info("Exiting MatchesServiceImpl.checkAlreadyJoined()");
 		return statusDTO;
 	}
 

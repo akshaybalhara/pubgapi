@@ -42,7 +42,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/user-reg")
 @Tag(name = "UserRegistration", description = "To register a new user")
-public class RegistrationController {
+public class RegistrationController implements MessageConstants {
 	
 	/**
 	 * The Logger instance.
@@ -86,8 +86,7 @@ public class RegistrationController {
 			String otp = Integer.toString((int)(Math.random()*9000)+1000);
 			statusDto = userService.registerNewUser(registrationRequest,otp);
 			if(statusDto.isSucceeded()) {
-				EmailDTO emailRequest = new EmailDTO(registrationRequest.getEmail(), "Registered successfully", "<h1>Registration Successfull.</h1><br><a href=\""
-						+"http://3.128.4.163:8080/pubgroom-api/user-reg/verify-account/"+registrationRequest.getUserId()+"/"+otp+"\"> Click here to verify your account </a><br><br>Regards,<br>PUBG Rooms Team");
+				EmailDTO emailRequest = new EmailDTO(registrationRequest.getEmail(), "Registered successfully", ACTIVATE_ACCOUNT_TEMPLATE_BEGIN+registrationRequest.getUserId()+"/"+otp+ACTIVATE_ACCOUNT_TEMPLATE_END);
 				emailRequest.setUserId(registrationRequest.getUserId());
 				utilService.sendEmailWithAttachment(emailRequest,"Registration");
 			}

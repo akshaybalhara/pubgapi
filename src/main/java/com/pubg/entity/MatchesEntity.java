@@ -33,6 +33,18 @@ public class MatchesEntity {
 	@Column(name="thirdPrize")
     private int thirdPrize;
 	
+	@Column(name="fourToFifthPrize")
+    private int fourToFifthPrize;
+	
+	@Column(name="sixthToTenthPrize")
+    private int sixthToTenthPrize;
+	
+	@Column(name="ElevenToFifteenPrize")
+    private int ElevenToFifteenPrize;
+	
+	@Column(name="SixteenToTwentyPrize")
+    private int SixteenToTwentyPrize;
+	
 	@Column(name="perKill")
     private int perKill;
 	
@@ -42,9 +54,6 @@ public class MatchesEntity {
 	@Column(name="map")
     private String map;
 	
-	@Column(name="leagueType")
-    private String leagueType;
-	
 	@Column(name="status")
     private String status;
 	
@@ -53,6 +62,12 @@ public class MatchesEntity {
 	
 	@Column(name="submissionDate")
     private Date submissionDate;
+	
+	@Column(name="playersJoined")
+    private int playersJoined;
+	
+	@Column(name="roomSize")
+    private int roomSize;
 
 	/**
 	 * @return the matchId
@@ -209,25 +224,98 @@ public class MatchesEntity {
 	}
 
 	/**
-	 * @return the leagueType
+	 * @return the playersJoined
 	 */
-	public String getLeagueType() {
-		return leagueType;
+	public int getPlayersJoined() {
+		return playersJoined;
 	}
 
 	/**
-	 * @param leagueType the leagueType to set
+	 * @param playersJoined the playersJoined to set
 	 */
-	public void setLeagueType(String leagueType) {
-		this.leagueType = leagueType;
+	public void setPlayersJoined(int playersJoined) {
+		this.playersJoined = playersJoined;
+	}
+
+	/**
+	 * @return the roomSize
+	 */
+	public int getRoomSize() {
+		return roomSize;
+	}
+
+	/**
+	 * @param roomSize the roomSize to set
+	 */
+	public void setRoomSize(int roomSize) {
+		this.roomSize = roomSize;
+	}
+
+	/**
+	 * @return the fourToFifthPrize
+	 */
+	public int getFourToFifthPrize() {
+		return fourToFifthPrize;
+	}
+
+	/**
+	 * @param fourToFifthPrize the fourToFifthPrize to set
+	 */
+	public void setFourToFifthPrize(int fourToFifthPrize) {
+		this.fourToFifthPrize = fourToFifthPrize;
+	}
+
+	/**
+	 * @return the sixthToTenthPrize
+	 */
+	public int getSixthToTenthPrize() {
+		return sixthToTenthPrize;
+	}
+
+	/**
+	 * @param sixthToTenthPrize the sixthToTenthPrize to set
+	 */
+	public void setSixthToTenthPrize(int sixthToTenthPrize) {
+		this.sixthToTenthPrize = sixthToTenthPrize;
+	}
+
+	/**
+	 * @return the elevenToFifteenPrize
+	 */
+	public int getElevenToFifteenPrize() {
+		return ElevenToFifteenPrize;
+	}
+
+	/**
+	 * @param elevenToFifteenPrize the elevenToFifteenPrize to set
+	 */
+	public void setElevenToFifteenPrize(int elevenToFifteenPrize) {
+		ElevenToFifteenPrize = elevenToFifteenPrize;
+	}
+
+	/**
+	 * @return the sixteenToTwentyPrize
+	 */
+	public int getSixteenToTwentyPrize() {
+		return SixteenToTwentyPrize;
+	}
+
+	/**
+	 * @param sixteenToTwentyPrize the sixteenToTwentyPrize to set
+	 */
+	public void setSixteenToTwentyPrize(int sixteenToTwentyPrize) {
+		SixteenToTwentyPrize = sixteenToTwentyPrize;
 	}
 
 	@Override
 	public String toString() {
 		return "MatchesEntity [matchId=" + matchId + ", entryFee=" + entryFee + ", firstPrize=" + firstPrize
-				+ ", secondPrize=" + secondPrize + ", thirdPrize=" + thirdPrize + ", perKill=" + perKill
-				+ ", matchType=" + matchType + ", map=" + map + ", leagueType=" + leagueType + ", status=" + status
-				+ ", dateAndTime=" + dateAndTime + ", submissionDate=" + submissionDate + "]";
+				+ ", secondPrize=" + secondPrize + ", thirdPrize=" + thirdPrize + ", fourToFifthPrize="
+				+ fourToFifthPrize + ", sixthToTenthPrize=" + sixthToTenthPrize + ", ElevenToFifteenPrize="
+				+ ElevenToFifteenPrize + ", SixteenToTwentyPrize=" + SixteenToTwentyPrize + ", perKill=" + perKill
+				+ ", matchType=" + matchType + ", map=" + map + ", status=" + status + ", dateAndTime=" + dateAndTime
+				+ ", submissionDate=" + submissionDate + ", playersJoined=" + playersJoined + ", roomSize=" + roomSize
+				+ "]";
 	}
 
 }

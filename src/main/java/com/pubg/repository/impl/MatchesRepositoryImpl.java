@@ -1,7 +1,9 @@
 package com.pubg.repository.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import com.pubg.compositeids.JoinedMatchesId;
 import com.pubg.entity.JoinedMatchesEntity;
 import com.pubg.entity.MatchesEntity;
 import com.pubg.exception.PUBGBusinessException;
@@ -44,12 +47,14 @@ public class MatchesRepositoryImpl implements MatchesRepository, MessageConstant
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MatchesEntity> getAllMatches(String leagueType) {
+	public List<MatchesEntity> getAllMatches() {
 		logger.info("Entering MatchesRepositoryImpl.getAllMatches()");
 		List<MatchesEntity> matches = new ArrayList<MatchesEntity>();
-		String selectQuery = "FROM MatchesEntity where status='Coming Soon' and leagueType='"+leagueType+"'";
+		String selectQuery = "FROM MatchesEntity where dateAndTime > :date";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		matches = entityManager.createQuery(selectQuery).getResultList();	
+		Date afterFifteenMinutes = new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15));
+		System.out.println(entityManager.createQuery(selectQuery));
+		matches = entityManager.createQuery(selectQuery).setParameter("date", afterFifteenMinutes).getResultList();	
 		entityManager.clear();
 		entityManager.close();
 		logger.info("Exiting MatchesRepositoryImpl.getAllMatches()");
@@ -89,37 +94,38 @@ public class MatchesRepositoryImpl implements MatchesRepository, MessageConstant
 
 	@Override
 	public void joinMatch(JoinedMatchesEntity request) {
-		boolean entryFeesPaid = checkEntryFeesStatus(request.getUserId(),request.getMatchId());
-		//proceed further to join the match only if user paid entry fees.
-		if(entryFeesPaid) {
-			EntityManager entityManager = entityManagerFactory.createEntityManager();
-			EntityTransaction entityTransaction = entityManager.getTransaction();
-			try {
-				//Start of transaction
-				entityTransaction.begin();
-				//persist method is used to do insertion of entities into their DB table.
-				entityManager.persist(request);
-				//commit will actually make this transaction persist in DB.
-				entityTransaction.commit();
-			} catch (RuntimeException e) {
-			    if (entityTransaction.isActive()) {
-			        entityTransaction.rollback();
-			    }
-			    e.printStackTrace();
-			    throw new PUBGBusinessException(SOMETHING_WENT_WRONG,SOMETHING_WENT_WRONG_MSG);
-			} finally {
-				entityManager.clear();
-			    entityManager.close();
-			}
-		}else {
-			throw new PUBGBusinessException("FEE_002","Entry fees not paid by the user.");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		EntityTransaction entityTransaction = entityManager.getTransaction();
+		try {
+			//Start of transaction
+			entityTransaction.begin();
+			//persist method is used to do insertion of entities into their DB table.
+			entityManager.persist(request);
+			//commit will actually make this transaction persist in DB.
+			entityTransaction.commit();
+		} catch (RuntimeException e) {
+		    if (entityTransaction.isActive()) {
+		        entityTransaction.rollback();
+		    }
+		    e.printStackTrace();
+		    throw new PUBGBusinessException(SOMETHING_WENT_WRONG,SOMETHING_WENT_WRONG_MSG);
+		} finally {
+			entityManager.clear();
+		    entityManager.close();
 		}
 		
 	}
 
-	private boolean checkEntryFeesStatus(String userId, int matchId) {
-		// TODO Auto-generated method stub
-		return true;
+	@Override
+	public boolean isAlreadyJoinedMatch(String userId, String matchId) {
+		JoinedMatchesId joinedMatchId = new JoinedMatchesId(userId, Integer.parseInt(matchId));
+		boolean flag = false;
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		JoinedMatchesEntity entity = entityManager.find(JoinedMatchesEntity.class, joinedMatchId);
+		if(entity!=null) {
+			flag=true;
+		}
+		return flag;
 	}
 
 		
