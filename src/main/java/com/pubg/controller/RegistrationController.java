@@ -99,6 +99,51 @@ public class RegistrationController implements MessageConstants {
 		return 	statusDto;
 	}
 	
+	/**
+	 * Update an existing user.
+	 */
+	@Operation(summary = "Update an existing user", description = "Update an existing user", tags = { "UserRegistration" })
+	@ApiResponses(value = { 
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = RegistrationEntity.class,hidden = true)))})
+	@RequestMapping(value = "/updateUser", method=RequestMethod.POST)
+	public  @ResponseBody StatusDTO updateUser(@RequestBody RegistrationEntity registrationRequest){
+		logger.info("Entering RegistrationController.updateUser() method.");
+		StatusDTO statusDto = new StatusDTO();
+		try {
+			System.out.println(registrationRequest.toString());
+			statusDto = userService.updateExistingUser(registrationRequest,null,null);
+		} catch (DisabledException e) {
+			throw new PUBGBusinessException("USER_DISABLED", e.getMessage());
+		} catch (BadCredentialsException e) {
+			throw new PUBGBusinessException(MessageConstants.SOMETHING_WENT_WRONG,MessageConstants.SOMETHING_WENT_WRONG_MSG);
+		}
+		logger.info("Exiting RegistrationController.updateUser() method.");
+		return 	statusDto;
+	}
+	
+	/**
+	 * Update pubgUsername.
+	 */
+	@Operation(summary = "Update an existing user", description = "Update an existing user", tags = { "UserRegistration" })
+	@ApiResponses(value = { 
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = RegistrationEntity.class,hidden = true)))})
+	@RequestMapping(value = "/updatePubgUsername/{userId}/{pubgUsername}", method=RequestMethod.POST)
+	public  @ResponseBody StatusDTO updatePubgUsername(@PathVariable String userId, @PathVariable String pubgUsername){
+		logger.info("Entering RegistrationController.updatePubgUsername() method.");
+		StatusDTO statusDto = new StatusDTO();
+		try {
+			statusDto = userService.updateExistingUser(null,userId,pubgUsername);
+		} catch (DisabledException e) {
+			throw new PUBGBusinessException("USER_DISABLED", e.getMessage());
+		} catch (BadCredentialsException e) {
+			throw new PUBGBusinessException(MessageConstants.SOMETHING_WENT_WRONG,MessageConstants.SOMETHING_WENT_WRONG_MSG);
+		}
+		logger.info("Exiting RegistrationController.updatePubgUsername() method.");
+		return 	statusDto;
+	}
+	
 	@Operation(summary = "Verify user's account", description = "Activate user's account.", tags = { "UserRegistration" })
 	@ApiResponses(value = { 
 	        @ApiResponse(responseCode = "200", description = "OK",

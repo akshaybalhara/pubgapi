@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pubg.dto.MatchesDTO;
-import com.pubg.dto.PushNotificationRequestDTO;
 import com.pubg.dto.StatusDTO;
 import com.pubg.dto.WalletDTO;
 import com.pubg.entity.MatchesEntity;

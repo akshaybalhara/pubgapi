@@ -1,11 +1,14 @@
 paytm.payment:
   sandbox:
-    merchantId: KsTXbX59061521109185
-    merchantKey: R@yj&DfNeE3TPTP6
+    #merchantId: KsTXbX59061521109185
+    #merchantKey: R@yj&DfNeE3TPTP6
+    merchantId: UuJvbJ33952158988695
+    merchantKey: NjHVU9@P!t8d8Na@
     channelId: WAP
     website: WEBSTAGING
     industryTypeId: Retail
-    paytmUrl:  https://securegw-stage.paytm.in/order/process
+    #paytmUrl:  https://securegw-stage.paytm.in/order/process
+    paytmUrl:  https://securegw.paytm.in/order/process
     callbackUrl: http://localhost:8100/paymentReceipt
     details:
       MID: ${paytm.payment.sandbox.merchantid}

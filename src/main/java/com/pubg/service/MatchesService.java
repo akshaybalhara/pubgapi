@@ -25,4 +25,6 @@ public interface MatchesService {
 	public StatusDTO joinAMatch(JoinedMatchesEntity request);
 
 	public StatusDTO checkAlreadyJoined(String userId, String matchId);
+
+	public List<MatchesEntity> listMyMatches(String userId);
 }

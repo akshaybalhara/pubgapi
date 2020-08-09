@@ -67,8 +67,8 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 	 *@param newUserEntity
 	 */
 	@Override
-	public void updateUserProfile(UserEntity newUserEntity) {
-		UserEntity updatedUserEntity = updateUserEntity(newUserEntity);
+	public void updateUserProfile(UserEntity updatedUserEntity) {
+		//UserEntity updatedUserEntity = updateUserEntity(newUserEntity);
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		EntityTransaction entityTransaction = entityManager.getTransaction();
 		try {
@@ -83,29 +83,6 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 			entityManager.clear();
 			entityManager.close();
 		}
-	}
-
-	/**
-	 *updateUserEntity updates the entity information on an employee.
-	 *
-	 *@param newUserEntity
-	 */
-	private UserEntity updateUserEntity(UserEntity newUserEntity) {
-		UserEntity oldUserEntity = new UserEntity();
-		if(null != newUserEntity && !newUserEntity.getUserId().isEmpty()) {
-			/*
-			 * oldUserEntity = getUserDetails(newUserEntity.getUserId()); if(null !=
-			 * newUserEntity.getContact() && !newUserEntity.getContact().isEmpty()) {
-			 * oldUserEntity.setContact(newUserEntity.getContact()); } if(null !=
-			 * newUserEntity.getDob()) { oldUserEntity.setDob(newUserEntity.getDob()); }
-			 * if(null != newUserEntity.getMartialStatus() &&
-			 * !newUserEntity.getMartialStatus().isEmpty()) {
-			 * oldUserEntity.setMartialStatus(newUserEntity.getMartialStatus()); }
-			 */
-		}else {
-			throw new PUBGBusinessException(SOMETHING_WENT_WRONG, SOMETHING_WENT_WRONG_MSG);
-		}
-		return oldUserEntity;
 	}
 
 	/**

@@ -56,6 +56,9 @@ public class RegistrationEntity {
 	
 	@Column(name="resetPin")
     private String resetPin;
+	
+	@Column(name="pubgUsername")
+    private String pubgUsername;
 
 	/**
 	 * @return the userId
@@ -239,12 +242,26 @@ public class RegistrationEntity {
 		this.resetPin = resetPin;
 	}
 
+	/**
+	 * @return the pubgUsername
+	 */
+	public String getPubgUsername() {
+		return pubgUsername;
+	}
+
+	/**
+	 * @param pubgUsername the pubgUsername to set
+	 */
+	public void setPubgUsername(String pubgUsername) {
+		this.pubgUsername = pubgUsername;
+	}
+
 	@Override
 	public String toString() {
 		return "RegistrationEntity [userId=" + userId + ", password=" + password + ", phone=" + phone + ", email="
 				+ email + ", fname=" + fname + ", lname=" + lname + ", gender=" + gender + ", role=" + role + ", otp="
 				+ otp + ", verificationLink=" + verificationLink + ", status=" + status + ", submissionDate="
-				+ submissionDate + "]";
+				+ submissionDate + ", resetPin=" + resetPin + ", pubgUsername=" + pubgUsername + "]";
 	}
 
 }

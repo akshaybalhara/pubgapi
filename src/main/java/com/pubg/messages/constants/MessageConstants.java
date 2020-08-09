@@ -67,8 +67,43 @@ public interface MessageConstants {
 			"        © 2020, Rewardz Plot, Inc. or its affiliates. All rights reserved. Read our Privacy Policy.\r\n" + 
 			"      </p>\r\n" + 
 			"    </div>";
+			
+			
+			//HTML Templates
+			public static final String RESET_PASSWORD_TEMPLATE_BEGIN = "<div class=\"Body-wrap-1\" style=\"width:100%; margin: auto; background-color: rgba(94,94,94,0.1); padding-bottom: 5%;\">"
+					+"<div class=\"Body-wrap-1a\" style=\"width:100%; height: auto; margin: auto; background-color: #0a0a0a;padding: 10px;text-align: center;\">\r\n" + 
+					"        <img src=\"https://rewardzplot.com/wp-content/uploads/2020/07/rp-full-name-logo.png\" alt=\"Logo-rewardzplot\" style=\"width:40%; inline:block;\" >\r\n" + 
+					"        <h2 style=\"font-family:'Roboto', sans-serif; color: #ffffff; width:50%; margin: auto; margin:2% auto;\">Account Activation</h2>\r\n" + 
+					"      </div>"
+					+"<div class=\"Body-wrap-1b\" style=\"width:100%; align-content: center;\r\n" + 
+					"        align-items: center;  height: auto; margin: auto;\">\r\n" + 
+					"        <p style=\"font-family:'Roboto', sans-serif; color: #5e5e5e; font-size: 15px; text-align:center; margin: 8%; line-height: 1.6;\">\r\n" + 
+					"          WELCOME to Rewardz Plot, Your contact information is sometimes used to contact you when necessary. We will transfer information\r\n" + 
+					"        about you if We are acquired by or merged with another company. In this process, we will notify you by\r\n" + 
+					"        email or by putting a prominent notice on the site and asks for your permission before\r\n" + 
+					"        information about you is transferred and becomes subject to a different privacy policy.<br><br>\r\n" + 
+					"\r\n" + 
+					"          (You can set new password By Clicking on Change Password Link.)" + 
+					"        </p>\r\n" + 
+					"          <div class=\"\" style=\"width:100%; height:auto; margin:auto;text-align:center;\">\r\n" + 
+					"            <a href=\""+"http://3.128.4.163:8080/pubgroom-api/user-auth/resetPassword/";
 	
-	
+			public static final String RESET_PASSWORD_TEMPLATE_END = "\"> Click here to reset your password. </a>" + 
+					"          </div>\r\n" + 
+					"\r\n" + 
+					"\r\n" + 
+					"\r\n" + 
+					"      </div>\r\n" + 
+					"\r\n" + 
+					"    </div>"
+					+"<div class=\"body-wrap-2\" style=\"width:100%; margin:0px auto;\">\r\n" + 
+					"      <p style=\"font-family:'Roboto', sans-serif; color: #a0a0a0; font-size: 12px; text-align:center; margin: 5%; line-height: 1.3;\">We hope you enjoyed this email.\r\n" + 
+					"         If you'd rather not receive future emails from Rewardz Plot, unsubscribe here.\r\n" + 
+					"        rewardz Plot, Inc. is a subsidiary of rewardzplot.com, is a registered trademark of RewardzPlot.\r\n" + 
+					"        This message was produced and distributed by Rewardzplot, Inc. and its affiliates.\r\n" + 
+					"        © 2020, Rewardz Plot, Inc. or its affiliates. All rights reserved. Read our Privacy Policy.\r\n" + 
+					"      </p>\r\n" + 
+					"    </div>";
 	
 	
 }

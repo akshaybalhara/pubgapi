@@ -63,6 +63,9 @@ public class UserEntity {
 	@Column(name="resetPin")
     private String resetPin;
 	
+	@Column(name="pubgUsername")
+    private String pubgUsername;
+	
 	@Transient
 	@JsonProperty("statusDto")
 	private StatusDTO statusDto;
@@ -280,12 +283,27 @@ public class UserEntity {
 		this.resetPin = resetPin;
 	}
 
+	/**
+	 * @return the pubgUsername
+	 */
+	public String getPubgUsername() {
+		return pubgUsername;
+	}
+
+	/**
+	 * @param pubgUsername the pubgUsername to set
+	 */
+	public void setPubgUsername(String pubgUsername) {
+		this.pubgUsername = pubgUsername;
+	}
+
 	@Override
 	public String toString() {
 		return "UserEntity [userId=" + userId + ", password=" + password + ", phone=" + phone + ", email=" + email
 				+ ", fname=" + fname + ", lname=" + lname + ", gender=" + gender + ", status=" + status + ", role="
 				+ role + ", device=" + device + ", deviceToken=" + deviceToken + ", submissionDate=" + submissionDate
-				+ ", statusDto=" + statusDto + ", token=" + token + "]";
+				+ ", resetPin=" + resetPin + ", pubgUsername=" + pubgUsername + ", statusDto=" + statusDto + ", token="
+				+ token + "]";
 	}
 
 }

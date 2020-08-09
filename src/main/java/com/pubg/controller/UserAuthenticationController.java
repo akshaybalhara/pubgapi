@@ -144,13 +144,12 @@ public class UserAuthenticationController implements MessageConstants {
 	public StatusDTO processForgotPassword(@PathVariable String userId) {
 		logger.info("Entering UserAuthenticationController.processForgotPassword() method.");
 		UserEntity user = userService.getUserProfile(userId);
-		String resetPasswordLink ="";
+		//String resetPasswordLink ="";
 		StatusDTO status = null;
 		if(user!=null && !user.getEmail().isEmpty()) {
 			int pin = (int)(Math.random()*9000+1000);
-			resetPasswordLink = "http://3.128.4.163:8080/pubgroom-api/user-auth/resetPassword/"+userId+"/"+pin;
-			EmailDTO emailRequest = new EmailDTO(user.getEmail(), "Reset password of your account", "<h1>Reset password by clicking below link or ignore if it's not you.</h1><br><a href=\""
-					+resetPasswordLink+"\"> Click here to reset password of your account </a><br><br>Regards,<br>PUBG Rooms Team");
+			//resetPasswordLink = "http://3.128.4.163:8080/pubgroom-api/user-auth/resetPassword/"+userId+"/"+pin;
+			EmailDTO emailRequest = new EmailDTO(user.getEmail(), "Reset password of your account", RESET_PASSWORD_TEMPLATE_BEGIN+userId+"/"+pin+RESET_PASSWORD_TEMPLATE_END);
 			emailRequest.setUserId(userId);
 			emailRequest.setData(Integer.toString(pin));
 			utilService.sendEmailWithAttachment(emailRequest,"ResetPassword");

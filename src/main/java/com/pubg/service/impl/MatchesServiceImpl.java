@@ -76,4 +76,12 @@ public class MatchesServiceImpl  extends BaseService implements MatchesService, 
 		return statusDTO;
 	}
 
+	@Override
+	public List<MatchesEntity> listMyMatches(String userId) {
+		logger.info("Entering into MatchesServiceImpl.listMyMatches()");
+		List<MatchesEntity> matches = matchesRepository.getMatchesByUserId(userId);
+		logger.info("Exiting MatchesServiceImpl.listMyMatches()");
+		return matches;
+	}
+
 }

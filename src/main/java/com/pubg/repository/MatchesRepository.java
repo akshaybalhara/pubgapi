@@ -20,4 +20,6 @@ public interface MatchesRepository {
 
 	public boolean isAlreadyJoinedMatch(String userId, String matchId);
 
+	public List<MatchesEntity> getMatchesByUserId(String userId);
+
 }

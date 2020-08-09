@@ -2,7 +2,9 @@ package com.pubg.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +27,7 @@ import com.pubg.dto.MatchesDTO;
 import com.pubg.dto.StatusDTO;
 import com.pubg.dto.WalletDTO;
 import com.pubg.entity.JoinedMatchesEntity;
+import com.pubg.entity.MatchesEntity;
 import com.pubg.entity.PaymentEntity;
 import com.pubg.entity.WalletEntity;
 import com.pubg.service.AdminService;
@@ -46,12 +50,32 @@ public class PaymentController {
 
 	@PostMapping(value = "/generateChecksum")
 	public @ResponseBody StatusDTO generateChecksum(@RequestBody TreeMap<String, String> paymentParams) throws Exception {
-
 		paymentParams.forEach((k, v) -> System.out.println("Key: "+k+" Value: "+v));
 		String checksum = getCheckSum(paymentParams);
 		System.out.println(checksum);
 		StatusDTO status = new StatusDTO(true, "checksum_001", checksum);
 		return status;
+	}
+	
+	@GetMapping(value = "/getTransactions/{userId}")
+	public @ResponseBody List<PaymentEntity> getAllTransactions(@PathVariable String userId) throws Exception {
+		List<PaymentEntity> transactions = new ArrayList<PaymentEntity>();
+		transactions = paymentService.getTransactionsByUserId(userId);
+		return transactions;
+	}
+	
+	@PostMapping(value = "/withdraw")
+	public @ResponseBody PaymentEntity withdrawMoney(@RequestBody TreeMap<String, String> withdrawRequest) throws Exception {
+		withdrawRequest.forEach((k, v) -> System.out.println("Key: "+k+" Value: "+v));
+		int amount = Integer.parseInt(withdrawRequest.get("amount"));
+		//String phone = withdrawRequest.get("phone");
+		String userId = withdrawRequest.get("userId");
+		WalletEntity walletEntity = adminService.getWalletBalance(userId);
+		PaymentEntity entity = new PaymentEntity();
+		if(amount >= 50 && walletEntity.getBalance() >= amount) {
+			entity = paymentService.addWithdrawRequest(userId,0,amount);
+		}
+		return entity;
 	}
 	
 	@PostMapping(value = "/payViaWallet")
@@ -62,7 +86,8 @@ public class PaymentController {
 		int amount = Integer.parseInt(paymentParams.get("amount"));
 		WalletEntity walletEntity = adminService.getWalletBalance(userId);
 		PaymentEntity paymentEntity = new PaymentEntity();
-		if(walletEntity.getBalance() > amount) {
+		MatchesEntity matchInfo = matchService.getMatchById(paymentParams.get("matchId"));
+		if(walletEntity.getBalance() >= amount && matchInfo.getEntryFee() <= amount) {
 			paymentEntity = paymentService.addWalletTransactionDetails(userId,matchId,amount);
 			if(paymentEntity.getPaymentStatus().equals("SUCCESS")) {
 				JoinedMatchesEntity entity = new JoinedMatchesEntity();
@@ -104,11 +129,13 @@ public class PaymentController {
 
 	private boolean validateCheckSum(TreeMap<String, String> parameters, String paytmChecksum) throws Exception {
 		return CheckSumServiceHelper.getCheckSumServiceHelper().verifycheckSum("R@yj&DfNeE3TPTP6",parameters, paytmChecksum);
+		//return CheckSumServiceHelper.getCheckSumServiceHelper().verifycheckSum("NjHVU9@P!t8d8Na@",parameters, paytmChecksum);
 	}
 
 
 	private String getCheckSum(TreeMap<String, String> parameters) throws Exception {
 		return CheckSumServiceHelper.getCheckSumServiceHelper().genrateCheckSum("R@yj&DfNeE3TPTP6", parameters);
+		//return CheckSumServiceHelper.getCheckSumServiceHelper().genrateCheckSum("NjHVU9@P!t8d8Na@", parameters);
 	}
 	
 	@PostMapping(value = "/pgresponse")

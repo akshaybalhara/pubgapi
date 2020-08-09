@@ -1,6 +1,8 @@
 package com.pubg.repository.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TreeMap;
 
 import javax.persistence.EntityManager;
@@ -77,11 +79,11 @@ public class PaymentRepositoryImpl implements PaymentRepository, MessageConstant
 		logger.info("Entering into PaymentRepositoryImpl.updatePaymentEntity()");
 		if(!parameters.isEmpty()) {
 			entity.setAmount(Double.parseDouble(parameters.get("TXNAMOUNT")));
-			entity.setBankName(parameters.get("BANKNAME"));
+			entity.setBankName(parameters.get("BANKNAME")!=null?parameters.get("BANKNAME"):"");
 			entity.setBankTxnId(parameters.get("BANKTXNID"));
 			entity.setOrderId(parameters.get("ORDERID"));
 			entity.setPaymentDate(new Date());
-			entity.setPaymentMode(parameters.get("PAYMENTMODE"));
+			entity.setPaymentMode(parameters.get("PAYMENTMODE")!=null?parameters.get("PAYMENTMODE"):"");
 			entity.setPaymentStatus(parameters.get("STATUS"));
 			entity.setResponseCode(parameters.get("RESPCODE"));
 			entity.setResponseMsg(parameters.get("RESPMSG"));
@@ -143,6 +145,74 @@ public class PaymentRepositoryImpl implements PaymentRepository, MessageConstant
 		entity.setUserId(userId);
 		logger.info("Exiting from PaymentRepositoryImpl.preparePaymentEntityForWallet()");
 		return entity;
+	}
+
+	@Override
+	public PaymentEntity addWithdrawTransaction(String userId, int matchId, int amount) {
+		logger.info("Entering into PaymentRepositoryImpl.addWithdrawTransaction()");
+		PaymentEntity entity = prepareWithdrawEntity(userId,matchId,amount);
+		
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		EntityTransaction entityTransaction = entityManager.getTransaction();
+		try {
+			//Start of transaction
+			entityTransaction.begin();
+			//persist method is used to do insertion of entities into their DB table.
+			entityManager.persist(entity);
+			//commit will actually make this transaction persist in DB.
+			entityTransaction.commit();
+			
+			//Deduct WalletBalance
+			WalletDTO walletDTO = new WalletDTO();
+			walletDTO.setOperation("Deduction");
+			walletDTO.setAmount(amount);
+			walletDTO.setUserId(userId);
+			adminService.updateWallet(walletDTO);
+		} catch (RuntimeException e) {
+		    if (entityTransaction.isActive()) {
+		        entityTransaction.rollback();
+		    }
+		    e.printStackTrace();
+		    throw new PUBGBusinessException(SOMETHING_WENT_WRONG,SOMETHING_WENT_WRONG_MSG);
+		} finally {
+			entityManager.clear();
+		    entityManager.close();
+		}
+		logger.info("Exiting from PaymentRepositoryImpl.addWithdrawTransaction()");
+		return entity;
+	}
+
+	private PaymentEntity prepareWithdrawEntity(String userId, int matchId, int amount) {
+		logger.info("Entering into PaymentRepositoryImpl.prepareWithdrawEntity()");
+		PaymentEntity entity = new PaymentEntity();
+		entity.setAmount(amount);
+		entity.setBankName("RewardPlot Wallet");
+		entity.setBankTxnId("WITHDRAW_"+new Date().getTime());
+		entity.setMatchId(0);
+		entity.setOrderId("RP_ORD_"+new Date().getTime());
+		entity.setPaymentDate(new Date());
+		entity.setPaymentMode("Paytm");
+		entity.setPaymentStatus("PENDING");
+		entity.setResponseCode("01");
+		entity.setResponseMsg("We successfully recieved your request to withdraw an amount of Rs."+amount+". Amount will be credited in your Paytm wallet within 4 hrs.");
+		entity.setTransactionId("RP_TXN_"+new Date().getTime());
+		entity.setUserId(userId);
+		logger.info("Exiting from PaymentRepositoryImpl.prepareWithdrawEntity()");
+		return entity;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaymentEntity> getTransactionsByUserId(String userId) {
+		logger.info("Entering into PaymentRepositoryImpl.getTransactionsByUserId()");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		List<PaymentEntity> transactions = new ArrayList<PaymentEntity>();
+		String selectQuery = "FROM PaymentEntity where user_id = :userId ORDER BY payment_date desc";
+		transactions = entityManager.createQuery(selectQuery).setParameter("userId", userId).getResultList();	
+		entityManager.clear();
+		entityManager.close();
+		logger.info("Exiting from PaymentRepositoryImpl.getTransactionsByUserId()");
+		return transactions;
 	}
 	
 	

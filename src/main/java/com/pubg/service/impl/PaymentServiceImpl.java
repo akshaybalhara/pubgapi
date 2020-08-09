@@ -1,5 +1,6 @@
 package com.pubg.service.impl;
 
+import java.util.List;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
@@ -45,6 +46,22 @@ public class PaymentServiceImpl  extends BaseService implements PaymentService, 
 		PaymentEntity entity = paymentRepository.addWalletTransaction(userId,matchId,amount);
 		logger.info("Exiting from PaymentServiceImpl.addPaymentTransactionDetails()");
 		return entity;
+	}
+
+	@Override
+	public PaymentEntity addWithdrawRequest(String userId, int matchId, int amount) {
+		logger.info("Entering into PaymentServiceImpl.addPaymentTransactionDetails()");
+		PaymentEntity entity = paymentRepository.addWithdrawTransaction(userId,matchId,amount);
+		logger.info("Exiting from PaymentServiceImpl.addPaymentTransactionDetails()");
+		return entity;
+	}
+
+	@Override
+	public List<PaymentEntity> getTransactionsByUserId(String userId) {
+		logger.info("Entering into PaymentServiceImpl.getTransactionsByUserId()");
+		List<PaymentEntity> transactions = paymentRepository.getTransactionsByUserId(userId);
+		logger.info("Exiting from PaymentServiceImpl.getTransactionsByUserId()");
+		return transactions;
 	}
 
 }

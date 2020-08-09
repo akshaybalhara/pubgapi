@@ -84,7 +84,30 @@ public class MatchesController {
 		}
 		logger.info("Exiting MatchesController.getAllMatches() method.");
 		return 	matches;
-	}	
+	}
+	
+	/**
+	 * Get list of all matches of a user
+	 */
+	@Operation(summary = "Get list of all matches of a user.", description = "Get list of all matches of a user.", tags = { "Matches" })
+	@ApiResponses(value = { 
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = MatchesEntity.class,hidden = true)))})
+	@RequestMapping(value = "/list-matches/{userId}", method=RequestMethod.GET)
+	public  @ResponseBody List<MatchesEntity> getMyMatches(@PathVariable String userId){
+		logger.info("Entering MatchesController.getMyMatches() method.");
+		List<MatchesEntity> matches = new ArrayList<MatchesEntity>();
+		try {
+			System.out.println(userId);
+			matches = matchesService.listMyMatches(userId);
+		} catch (DisabledException e) {
+			throw new PUBGBusinessException("USER_DISABLED", e.getMessage());
+		} catch (BadCredentialsException e) {
+			throw new PUBGBusinessException(MessageConstants.SOMETHING_WENT_WRONG,MessageConstants.SOMETHING_WENT_WRONG_MSG);
+		}
+		logger.info("Exiting MatchesController.getMyMatches() method.");
+		return 	matches;
+	}
 	
 	/**
 	 * Get match details.

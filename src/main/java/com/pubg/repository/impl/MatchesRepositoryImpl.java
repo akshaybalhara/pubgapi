@@ -50,7 +50,7 @@ public class MatchesRepositoryImpl implements MatchesRepository, MessageConstant
 	public List<MatchesEntity> getAllMatches() {
 		logger.info("Entering MatchesRepositoryImpl.getAllMatches()");
 		List<MatchesEntity> matches = new ArrayList<MatchesEntity>();
-		String selectQuery = "FROM MatchesEntity where dateAndTime > :date";
+		String selectQuery = "FROM MatchesEntity where dateAndTime > :date ORDER BY dateAndTime desc";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		Date afterFifteenMinutes = new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15));
 		System.out.println(entityManager.createQuery(selectQuery));
@@ -125,7 +125,32 @@ public class MatchesRepositoryImpl implements MatchesRepository, MessageConstant
 		if(entity!=null) {
 			flag=true;
 		}
+		entityManager.clear();
+	    entityManager.close();
 		return flag;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<MatchesEntity> getMatchesByUserId(String userId) {
+		logger.info("Entering MatchesRepositoryImpl.getMatchesByUserId()");
+		List<JoinedMatchesEntity> matchesJoined = new ArrayList<JoinedMatchesEntity>();
+		String selectQuery = "FROM JoinedMatchesEntity where userId = :userId";
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		matchesJoined = entityManager.createQuery(selectQuery).setParameter("userId", userId).getResultList();
+		List<MatchesEntity> matches = new ArrayList<MatchesEntity>();
+		if(matchesJoined!=null && matchesJoined.size() > 0) {
+			for (JoinedMatchesEntity joinedMatchesEntity : matchesJoined) {
+				MatchesEntity match = new MatchesEntity();
+				String query = "FROM MatchesEntity where matchId = :matchId and status='Coming Soon' ORDER BY dateAndTime desc";
+				match = (MatchesEntity) entityManager.createQuery(query).setParameter("matchId", joinedMatchesEntity.getMatchId()).getResultList().get(0);
+				matches.add(match);
+			}
+		}
+		entityManager.clear();
+		entityManager.close();
+		logger.info("Exiting MatchesRepositoryImpl.getMatchesByUserId()");
+		return matches;
 	}
 
 		

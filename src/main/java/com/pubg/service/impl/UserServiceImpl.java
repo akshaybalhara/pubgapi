@@ -72,7 +72,7 @@ public class UserServiceImpl  extends BaseService implements UserService, Messag
 	@Override
 	public StatusDTO updateUserProfile(UserEntity userEntity) {
 		userInfoRepository.updateUserProfile(userEntity);
-		StatusDTO status = new StatusDTO(true,"","");
+		StatusDTO status = new StatusDTO(true,"USR_001","User profile updated successfully.");
 		return status;
 	}
 	
@@ -138,6 +138,34 @@ public class UserServiceImpl  extends BaseService implements UserService, Messag
 	@Override
 	public AppUpdateEntity checkAppUpdate() {
 		return userInfoRepository.checkAppVersion();
+	}
+
+	@Override
+	public StatusDTO updateExistingUser(RegistrationEntity registrationRequest, String userId, String pubgUsername) {
+		logger.info("Entering into UserServiceImpl.updateExistingUser()");
+		StatusDTO status = new StatusDTO();
+		if(userId!=null && pubgUsername!=null) {
+			UserEntity userEntity = getUserProfile(userId);
+			userEntity.setPubgUsername(pubgUsername);
+			status = updateUserProfile(userEntity);
+			logger.info("Updating Pubg username only....");
+		}else {
+			UserEntity userEntity = getUpdatedUserEntity(registrationRequest);
+			status = updateUserProfile(userEntity);
+			logger.info("Updating full user profile....");
+		}
+		logger.info("Exiting UserServiceImpl.updateExistingUser()");
+		return status;
+	}
+
+	private UserEntity getUpdatedUserEntity(RegistrationEntity registrationRequest) {
+		UserEntity userEntity = getUserProfile(registrationRequest.getUserId());
+		if(registrationRequest!=null) {
+			userEntity.setPhone(registrationRequest.getPhone());
+			userEntity.setPubgUsername(registrationRequest.getPubgUsername());
+			userEntity.setEmail(registrationRequest.getEmail());
+		}
+		return userEntity;
 	}
 
 }

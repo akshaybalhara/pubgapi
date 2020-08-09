@@ -75,6 +75,8 @@ public interface UserService {
 	public boolean checkUserId(String userId);
 
 	public AppUpdateEntity checkAppUpdate();
+
+	public StatusDTO updateExistingUser(RegistrationEntity registrationRequest, String userId, String pubgUsername);
 	
 
 }
