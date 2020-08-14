@@ -7,6 +7,10 @@ public class WalletDTO {
 	private int amount;
 	
 	private String operation;
+	
+	private boolean updatingWinningAmount;
+	
+	private int matchId;
 
 	/**
 	 * @return the userId
@@ -50,9 +54,38 @@ public class WalletDTO {
 		this.operation = operation;
 	}
 
+	/**
+	 * @return the updatingWinningAmount
+	 */
+	public boolean isUpdatingWinningAmount() {
+		return updatingWinningAmount;
+	}
+
+	/**
+	 * @param updatingWinningAmount the updatingWinningAmount to set
+	 */
+	public void setUpdatingWinningAmount(boolean updatingWinningAmount) {
+		this.updatingWinningAmount = updatingWinningAmount;
+	}
+
+	/**
+	 * @return the matchId
+	 */
+	public int getMatchId() {
+		return matchId;
+	}
+
+	/**
+	 * @param matchId the matchId to set
+	 */
+	public void setMatchId(int matchId) {
+		this.matchId = matchId;
+	}
+
 	@Override
 	public String toString() {
-		return "WalletDTO [userId=" + userId + ", amount=" + amount + ", operation=" + operation + "]";
+		return "WalletDTO [userId=" + userId + ", amount=" + amount + ", operation=" + operation
+				+ ", updatingWinningAmount=" + updatingWinningAmount + ", matchId=" + matchId + "]";
 	}
 
 }

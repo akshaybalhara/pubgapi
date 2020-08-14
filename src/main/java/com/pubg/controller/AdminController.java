@@ -3,6 +3,9 @@
  */
 package com.pubg.controller;
 
+import java.util.List;
+import java.util.TreeMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +21,12 @@ import com.pubg.dto.MatchesDTO;
 import com.pubg.dto.StatusDTO;
 import com.pubg.dto.WalletDTO;
 import com.pubg.entity.MatchesEntity;
+import com.pubg.entity.PaymentEntity;
+import com.pubg.entity.UserEntity;
 import com.pubg.entity.WalletEntity;
 import com.pubg.service.AdminService;
 import com.pubg.service.PushNotificationService;
+import com.pubg.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -47,6 +53,9 @@ public class AdminController {
 	
 	@Autowired
 	private AdminService adminService;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private PushNotificationService pushNotificationService;
@@ -90,6 +99,9 @@ public class AdminController {
 		logger.info("Entering AdminController.deductWalletBalance() method.");
 		StatusDTO response = null;
 		walletDTO.setOperation("Deduction");
+		UserEntity entity = userService.getUserProfileByPubgUsername(walletDTO.getUserId());
+		walletDTO.setUserId(entity.getUserId());
+		walletDTO.setUpdatingWinningAmount(true);
 		response = adminService.updateWallet(walletDTO);
 		logger.info("Exiting AdminController.deductWalletBalance() method.");
 		return 	response;
@@ -107,9 +119,27 @@ public class AdminController {
 		logger.info("Entering AdminController.addWalletBalance() method.");
 		StatusDTO response = null;
 		walletDTO.setOperation("Addition");
+		UserEntity entity = userService.getUserProfileByPubgUsername(walletDTO.getUserId());
+		walletDTO.setUserId(entity.getUserId());
+		walletDTO.setUpdatingWinningAmount(true);
 		response = adminService.updateWallet(walletDTO);
 		logger.info("Exiting AdminController.addWalletBalance() method.");
 		return 	response;
+	}
+	
+	/**
+	 * Update roomId and Password of a match.
+	 */
+	@Operation(summary = "Update roomId and Password of a match", description = "Update roomId and Password of a match", tags = { "AdminController" })
+	@ApiResponses(value = { 
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = StatusDTO.class,hidden = true)))})
+	@RequestMapping(value = "/updateRoomIdPass", method=RequestMethod.POST)
+	public  @ResponseBody StatusDTO updateRoomIdPass(@RequestBody TreeMap<String, String> roomIdPassReq){
+		logger.info("Entering AdminController.updateRoomIdPass() method.");
+		StatusDTO statusDto = adminService.updateRoomIdPass(roomIdPassReq.get("roomId"),roomIdPassReq.get("password"), roomIdPassReq.get("matchId"));
+		logger.info("Exiting AdminController.updateRoomIdPass() method.");
+		return 	statusDto;
 	}
 	
 	/**
@@ -125,5 +155,50 @@ public class AdminController {
 		WalletEntity entity = adminService.getWalletBalance(userId);
 		logger.info("Exiting AdminController.getWalletBalance() method.");
 		return 	entity;
+	}
+	
+	/**
+	 * Cancel or Expires a match.
+	 */
+	@Operation(summary = "Cancel or Expires a match.", description = "Cancel or Expires a match.", tags = { "AdminController" })
+	@ApiResponses(value = { 
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = StatusDTO.class,hidden = true)))})
+	@RequestMapping(value = "/expireMatch/{matchId}/{matchStatus}", method=RequestMethod.POST)
+	public  @ResponseBody StatusDTO expireAMatch(@PathVariable String matchId, @PathVariable String matchStatus){
+		logger.info("Entering AdminController.expireAMatch() method.");
+		StatusDTO statusDto = adminService.expireAMatch(matchId,matchStatus);
+		logger.info("Exiting AdminController.expireAMatch() method.");
+		return 	statusDto;
+	}
+	
+	/**
+	 * Update Prizes.
+	 */
+	@Operation(summary = "Update Prizes.", description = "Update Prizes.", tags = { "AdminController" })
+	@ApiResponses(value = { 
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = StatusDTO.class,hidden = true)))})
+	@RequestMapping(value = "/updatePrizes", method=RequestMethod.POST)
+	public  @ResponseBody StatusDTO updatePrizes(@RequestBody TreeMap<String, String> updatePrizesReq){
+		logger.info("Entering AdminController.updatePrizes() method.");
+		StatusDTO statusDto = adminService.updatePrizes(updatePrizesReq);
+		logger.info("Exiting AdminController.updatePrizes() method.");
+		return 	statusDto;
+	}
+	
+	/**
+	 * Get all withdraw requests.
+	 */
+	@Operation(summary = "Get all withdraw requests.", description = "Get all withdraw requests.", tags = { "AdminController" })
+	@ApiResponses(value = { 
+	        @ApiResponse(responseCode = "200", description = "OK",
+	                content = @Content(schema = @Schema(implementation = StatusDTO.class,hidden = true)))})
+	@RequestMapping(value = "/withdrawRequests", method=RequestMethod.GET)
+	public  @ResponseBody List<PaymentEntity> getWithdrawRequests(){
+		logger.info("Entering AdminController.withdrawRequests() method.");
+		List<PaymentEntity> withdrawlRequests = adminService.getWithdrawRequests();
+		logger.info("Exiting AdminController.withdrawRequests() method.");
+		return 	withdrawlRequests;
 	}
 }

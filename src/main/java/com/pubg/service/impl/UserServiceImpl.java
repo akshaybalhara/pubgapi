@@ -168,4 +168,10 @@ public class UserServiceImpl  extends BaseService implements UserService, Messag
 		return userEntity;
 	}
 
+	@Override
+	public UserEntity getUserProfileByPubgUsername(String pubgUsername) {
+		UserEntity entity = userInfoRepository.getUserByPubgUsername(pubgUsername);
+		return entity;
+	}
+
 }

@@ -3,7 +3,10 @@
  */
 package com.pubg.repository.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.TreeMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import com.pubg.dto.MatchesDTO;
 import com.pubg.dto.WalletDTO;
 import com.pubg.entity.MatchesEntity;
+import com.pubg.entity.PaymentEntity;
 import com.pubg.entity.WalletEntity;
 import com.pubg.exception.PUBGBusinessException;
 import com.pubg.messages.constants.MessageConstants;
@@ -127,12 +131,15 @@ public class AdminRepositoryImpl implements AdminRepository,MessageConstants{
 		return entity;
 	}
 
+	//TODO add code for transaction entry for updating winning amount
 	@Override
 	public void updateBalance(WalletDTO walletDTO) {
 		logger.info("Entering AdminRepositoryImpl.updateBalance()");
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		EntityTransaction entityTransaction=entityManager.getTransaction();
 		try {
+			//Start of transaction
+			entityTransaction.begin();
 			WalletEntity entity = getBalance(walletDTO.getUserId());
 			if(entity == null) {
 				entity = new WalletEntity();
@@ -144,8 +151,24 @@ public class AdminRepositoryImpl implements AdminRepository,MessageConstants{
 				entity.setBalance(entity.getBalance() + walletDTO.getAmount());
 			}
 			entity.setLastUpdated(new Date());
-			//Start of transaction
-			entityTransaction.begin();
+			if(walletDTO.isUpdatingWinningAmount()) {
+				PaymentEntity paymentEntity = new PaymentEntity();
+				paymentEntity.setAmount(walletDTO.getAmount());
+				paymentEntity.setBankName("RewardzPlotWallet");
+				paymentEntity.setBankTxnId("WIN_AMT_"+new Date().getTime());
+				int matchId = walletDTO.getMatchId() > 0 ? walletDTO.getMatchId() : 0;
+				paymentEntity.setMatchId(matchId);
+				paymentEntity.setOrderId("RP_WIN_"+matchId+"_"+new Date().getTime());
+				paymentEntity.setPaymentDate(new Date());
+				paymentEntity.setPaymentMode("RP_Wallet");
+				paymentEntity.setPaymentStatus("SUCCESS");
+				paymentEntity.setResponseCode("01");
+				paymentEntity.setResponseMsg("Payment amount added against match id: "+matchId);
+				paymentEntity.setTransactionId("RP_TXN_"+new Date().getTime());
+				paymentEntity.setUserId(walletDTO.getUserId());
+				entityManager.persist(paymentEntity);
+			}
+			
 			//persist method is used to do insertion of entities into their DB table.
 			entityManager.merge(entity);
 			
@@ -180,6 +203,114 @@ public class AdminRepositoryImpl implements AdminRepository,MessageConstants{
 		logger.info("Exiting AdminRepositoryImpl.getBalance()");
 		return entity;
 	}
-	
+
+	@Override
+	public void updateRoomIdPass(String roomId, String password, String matchId) {
+		logger.info("Entering AdminRepositoryImpl.updateRoomIdPass()");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		MatchesEntity matchesEntity = matchesService.getMatchById(matchId);
+		matchesEntity.setRoomId(roomId);
+		matchesEntity.setPassword(password);
+		
+		EntityTransaction entityTransaction=entityManager.getTransaction();
+		try {
+			//Start of transaction
+			entityTransaction.begin();
+			//persist method is used to do insertion of entities into their DB table.
+			entityManager.merge(matchesEntity);
+			
+			//commit will actually make this transaction persist in DB.
+			entityTransaction.commit();
+		} catch (RuntimeException e) {
+			if (entityTransaction.isActive()) {
+				entityTransaction.rollback();
+			}
+			e.printStackTrace();
+			throw new PUBGBusinessException(SOMETHING_WENT_WRONG,SOMETHING_WENT_WRONG_MSG);
+		} finally {
+			entityManager.clear();
+			entityManager.close();
+		}
+		logger.info("Exiting AdminRepositoryImpl.updateRoomIdPass()");
+	}
+
+	@Override
+	public void expireAMatch(String matchId, String matchStatus) {
+		logger.info("Entering AdminRepositoryImpl.expireAMatch()");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		MatchesEntity matchesEntity = matchesService.getMatchById(matchId);
+		matchesEntity.setStatus(matchStatus);
+		
+		EntityTransaction entityTransaction=entityManager.getTransaction();
+		try {
+			//Start of transaction
+			entityTransaction.begin();
+			//persist method is used to do insertion of entities into their DB table.
+			entityManager.merge(matchesEntity);
+			
+			//commit will actually make this transaction persist in DB.
+			entityTransaction.commit();
+		} catch (RuntimeException e) {
+			if (entityTransaction.isActive()) {
+				entityTransaction.rollback();
+			}
+			e.printStackTrace();
+			throw new PUBGBusinessException(SOMETHING_WENT_WRONG,SOMETHING_WENT_WRONG_MSG);
+		} finally {
+			entityManager.clear();
+			entityManager.close();
+		}
+		logger.info("Exiting AdminRepositoryImpl.expireAMatch()");
+		
+	}
+
+	@Override
+	public void updatePrizes(TreeMap<String, String> updatePrizesReq) {
+		logger.info("Entering AdminRepositoryImpl.updatePrizes()");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		MatchesEntity matchesEntity = matchesService.getMatchById(updatePrizesReq.get("matchId"));
+		matchesEntity.setFirstPrize(Integer.parseInt(updatePrizesReq.get("firstPrize")));
+		matchesEntity.setSecondPrize(Integer.parseInt(updatePrizesReq.get("secondPrize")));
+		matchesEntity.setThirdPrize(Integer.parseInt(updatePrizesReq.get("thirdPrize")));
+		matchesEntity.setFourToFifthPrize(Integer.parseInt(updatePrizesReq.get("fourToFifthPrize")));
+		matchesEntity.setSixthToTenthPrize(Integer.parseInt(updatePrizesReq.get("sixthToTenthPrize")));
+		matchesEntity.setElevenToFifteenPrize(Integer.parseInt(updatePrizesReq.get("elevenToFifteenPrize")));
+		matchesEntity.setSixteenToTwentyPrize(Integer.parseInt(updatePrizesReq.get("sixteenToTwentyPrize")));
+		
+		EntityTransaction entityTransaction=entityManager.getTransaction();
+		try {
+			//Start of transaction
+			entityTransaction.begin();
+			//persist method is used to do insertion of entities into their DB table.
+			entityManager.merge(matchesEntity);
+			
+			//commit will actually make this transaction persist in DB.
+			entityTransaction.commit();
+		} catch (RuntimeException e) {
+			if (entityTransaction.isActive()) {
+				entityTransaction.rollback();
+			}
+			e.printStackTrace();
+			throw new PUBGBusinessException(SOMETHING_WENT_WRONG,SOMETHING_WENT_WRONG_MSG);
+		} finally {
+			entityManager.clear();
+			entityManager.close();
+		}
+		logger.info("Exiting AdminRepositoryImpl.updatePrizes()");
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaymentEntity> getWithdrawRequests() {
+		logger.info("Entering AdminRepositoryImpl.getWithdrawRequests()");
+		List<PaymentEntity> withdrawlRequests = new ArrayList<PaymentEntity>();
+		String selectQuery = "FROM PaymentEntity as pe where pe.bankTxnId like :likeParam and pe.paymentStatus='PENDING'";
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		withdrawlRequests = entityManager.createQuery(selectQuery).setParameter("likeParam", "%WITHDRAW_%").getResultList();
+		entityManager.clear();
+		entityManager.close();
+		logger.info("Exiting AdminRepositoryImpl.getWithdrawRequests()");
+		return withdrawlRequests;
+	}
 	
 }

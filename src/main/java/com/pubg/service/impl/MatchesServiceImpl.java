@@ -38,6 +38,7 @@ public class MatchesServiceImpl  extends BaseService implements MatchesService, 
 	public List<MatchesEntity> listAllMatches() {
 		logger.info("Entering into MatchesServiceImpl.listAllMatches()");
 		List<MatchesEntity> matches = matchesRepository.getAllMatches();
+		matches.forEach((match) -> {match.setRoomId(null);match.setPassword(null);});
 		logger.info("Exiting MatchesServiceImpl.listAllMatches()");
 		return matches;
 	}

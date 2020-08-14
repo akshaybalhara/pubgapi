@@ -302,6 +302,18 @@ public class UserInfoRepositoryImpl implements UserInfoRepository, MessageConsta
 		entityManager.close(); 
 		return appUpdateEntity;
 	}
+
+
+
+	@Override
+	public UserEntity getUserByPubgUsername(String pubgUsername) {
+		String selectQuery = "FROM UserEntity where pubgUsername = '"+pubgUsername+"'";
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		UserEntity entity = (UserEntity) entityManager.createQuery(selectQuery).getResultList().get(0);
+		entityManager.clear();
+		entityManager.close();
+		return entity;
+	}
 	
 	
 	

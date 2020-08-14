@@ -50,7 +50,6 @@ public class PaymentController {
 
 	@PostMapping(value = "/generateChecksum")
 	public @ResponseBody StatusDTO generateChecksum(@RequestBody TreeMap<String, String> paymentParams) throws Exception {
-		paymentParams.forEach((k, v) -> System.out.println("Key: "+k+" Value: "+v));
 		String checksum = getCheckSum(paymentParams);
 		System.out.println(checksum);
 		StatusDTO status = new StatusDTO(true, "checksum_001", checksum);
@@ -66,7 +65,6 @@ public class PaymentController {
 	
 	@PostMapping(value = "/withdraw")
 	public @ResponseBody PaymentEntity withdrawMoney(@RequestBody TreeMap<String, String> withdrawRequest) throws Exception {
-		withdrawRequest.forEach((k, v) -> System.out.println("Key: "+k+" Value: "+v));
 		int amount = Integer.parseInt(withdrawRequest.get("amount"));
 		//String phone = withdrawRequest.get("phone");
 		String userId = withdrawRequest.get("userId");
@@ -80,7 +78,6 @@ public class PaymentController {
 	
 	@PostMapping(value = "/payViaWallet")
 	public @ResponseBody PaymentEntity joinViaWallet(@RequestBody TreeMap<String, String> paymentParams) throws Exception {
-		paymentParams.forEach((k, v) -> System.out.println("Key: "+k+" Value: "+v));
 		String userId = paymentParams.get("userId");
 		int matchId = Integer.parseInt(paymentParams.get("matchId"));
 		int amount = Integer.parseInt(paymentParams.get("amount"));
@@ -114,8 +111,6 @@ public class PaymentController {
 	
 	@PostMapping(value = "/verifyChecksum/{paytmChecksum}")
 	public @ResponseBody StatusDTO verifyChecksum(@RequestBody TreeMap<String, String> paymentParams, @PathVariable String paytmChecksum) throws Exception {
-
-		paymentParams.forEach((k, v) -> System.out.println("Key: "+k+" Value: "+v));
 		boolean flag = validateCheckSum(paymentParams,paytmChecksum);
 		StatusDTO status =null;
 		if(flag) {

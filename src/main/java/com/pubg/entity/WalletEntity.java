@@ -73,4 +73,5 @@ public class WalletEntity {
 	public String toString() {
 		return "WalletEntity [userId=" + userId + ", balance=" + balance + ", lastUpdated=" + lastUpdated + "]";
 	}
+
 }

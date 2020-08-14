@@ -3,6 +3,9 @@
  */
 package com.pubg.service.impl;
 
+import java.util.List;
+import java.util.TreeMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.pubg.dto.MatchesDTO;
 import com.pubg.dto.StatusDTO;
 import com.pubg.dto.WalletDTO;
+import com.pubg.entity.PaymentEntity;
 import com.pubg.entity.WalletEntity;
 import com.pubg.exception.PUBGBusinessException;
 import com.pubg.messages.constants.MessageConstants;
@@ -72,6 +76,33 @@ public class AdminServiceImpl extends BaseService implements AdminService,Messag
 		WalletEntity entity = adminRepository.getBalance(userId);
 		logger.info("Entering AdminServiceImpl.getWalletBalance().");
 		return entity;
+	}
+
+	@Override
+	public StatusDTO updateRoomIdPass(String roomId, String password, String matchId) {
+		adminRepository.updateRoomIdPass(roomId,password,matchId);
+		StatusDTO status = new StatusDTO(true,"RMP_001","RoomId and Password updated successfully.");
+		return status;
+	}
+
+	@Override
+	public StatusDTO expireAMatch(String matchId, String matchStatus) {
+		adminRepository.expireAMatch(matchId,matchStatus);
+		StatusDTO status = new StatusDTO(true,"EXP_001","Status of match updated successfully");
+		return status;
+	}
+
+	@Override
+	public StatusDTO updatePrizes(TreeMap<String, String> updatePrizesReq) {
+		adminRepository.updatePrizes(updatePrizesReq);
+		StatusDTO status = new StatusDTO(true,"EXP_001","Prizes updated successfully");
+		return status;
+	}
+
+	@Override
+	public List<PaymentEntity> getWithdrawRequests() {
+		List<PaymentEntity> withdrawlReqs = adminRepository.getWithdrawRequests();
+		return withdrawlReqs;
 	}
 	
 }

@@ -50,10 +50,10 @@ public class MatchesRepositoryImpl implements MatchesRepository, MessageConstant
 	public List<MatchesEntity> getAllMatches() {
 		logger.info("Entering MatchesRepositoryImpl.getAllMatches()");
 		List<MatchesEntity> matches = new ArrayList<MatchesEntity>();
-		String selectQuery = "FROM MatchesEntity where dateAndTime > :date ORDER BY dateAndTime desc";
+		String selectQuery = "FROM MatchesEntity as me where me.dateAndTime > :date ORDER BY me.dateAndTime desc";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		Date afterFifteenMinutes = new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15));
-		System.out.println(entityManager.createQuery(selectQuery));
+		System.out.println(entityManager.createQuery(selectQuery).toString());
 		matches = entityManager.createQuery(selectQuery).setParameter("date", afterFifteenMinutes).getResultList();	
 		entityManager.clear();
 		entityManager.close();
@@ -135,14 +135,14 @@ public class MatchesRepositoryImpl implements MatchesRepository, MessageConstant
 	public List<MatchesEntity> getMatchesByUserId(String userId) {
 		logger.info("Entering MatchesRepositoryImpl.getMatchesByUserId()");
 		List<JoinedMatchesEntity> matchesJoined = new ArrayList<JoinedMatchesEntity>();
-		String selectQuery = "FROM JoinedMatchesEntity where userId = :userId";
+		String selectQuery = "FROM JoinedMatchesEntity as jme where jme.userId = :userId ORDER BY jme.matchId desc";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		matchesJoined = entityManager.createQuery(selectQuery).setParameter("userId", userId).getResultList();
 		List<MatchesEntity> matches = new ArrayList<MatchesEntity>();
 		if(matchesJoined!=null && matchesJoined.size() > 0) {
 			for (JoinedMatchesEntity joinedMatchesEntity : matchesJoined) {
 				MatchesEntity match = new MatchesEntity();
-				String query = "FROM MatchesEntity where matchId = :matchId and status='Coming Soon' ORDER BY dateAndTime desc";
+				String query = "FROM MatchesEntity where matchId = :matchId and status='Coming Soon'";
 				match = (MatchesEntity) entityManager.createQuery(query).setParameter("matchId", joinedMatchesEntity.getMatchId()).getResultList().get(0);
 				matches.add(match);
 			}

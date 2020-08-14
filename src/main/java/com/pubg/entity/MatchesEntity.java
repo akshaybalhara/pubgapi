@@ -68,6 +68,40 @@ public class MatchesEntity {
 	
 	@Column(name="roomSize")
     private int roomSize;
+	
+	@Column(name="roomId")
+    private String roomId;
+	
+	@Column(name="password")
+    private String password;
+
+	/**
+	 * @return the roomId
+	 */
+	public String getRoomId() {
+		return roomId;
+	}
+
+	/**
+	 * @param roomId the roomId to set
+	 */
+	public void setRoomId(String roomId) {
+		this.roomId = roomId;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	/**
 	 * @return the matchId
@@ -315,7 +349,7 @@ public class MatchesEntity {
 				+ ElevenToFifteenPrize + ", SixteenToTwentyPrize=" + SixteenToTwentyPrize + ", perKill=" + perKill
 				+ ", matchType=" + matchType + ", map=" + map + ", status=" + status + ", dateAndTime=" + dateAndTime
 				+ ", submissionDate=" + submissionDate + ", playersJoined=" + playersJoined + ", roomSize=" + roomSize
-				+ "]";
+				+ ", roomId=" + roomId + ", password=" + password + "]";
 	}
 
 }

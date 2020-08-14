@@ -60,4 +60,6 @@ public interface UserInfoRepository {
 
 	public AppUpdateEntity checkAppVersion();
 
+	public UserEntity getUserByPubgUsername(String pubgUsername);
+
 }
